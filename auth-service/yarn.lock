@@ -707,6 +707,14 @@
     tslib "2.4.0"
     uuid "9.0.0"
 
+"@nestjs/microservices@^9.1.4":
+  version "9.1.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-9.1.4.tgz#e5a370f9cb3be9c755dcb71ae7a9185350d656e5"
+  integrity sha512-aNDaDlb5P8pC3++Zkp+sSaweKovPR2hg55iZsXZSwYQKGb+GC/gsKMp9kGyE1a5aPhoHD8UAM98Ff7s4Qp8tvg==
+  dependencies:
+    iterare "1.2.1"
+    tslib "2.4.0"
+
 "@nestjs/platform-express@^9.0.0":
   version "9.1.4"
   resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-9.1.4.tgz#4829d56c9ce16c5ec11dc107f7df98b20c77b92d"
@@ -3221,6 +3229,11 @@ jsonfile@^6.0.1:
     universalify "^2.0.0"
   optionalDependencies:
     graceful-fs "^4.1.6"
+
+kafkajs@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/kafkajs/-/kafkajs-2.2.1.tgz#277d96459e25cfd77bb1c6bf792396403912abe8"
+  integrity sha512-f3a4TDeBx0TMIqAnSob64lE4oMOSFDjoycOHzyxISpOzPw5GT2AyX6ibfyUPpt5nTxwGkJSFRxPpidNTd/Uz9Q==
 
 kleur@^3.0.3:
   version "3.0.3"

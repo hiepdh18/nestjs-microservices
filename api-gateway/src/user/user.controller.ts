@@ -12,9 +12,9 @@ export class UserController {
         brokers: ['localhost:9092'],
       },
       consumer: {
-        groupId: 'user-consumer'
-      }
-    }
+        groupId: 'user-consumer',
+      },
+    },
   })
   client: ClientKafka;
 
@@ -26,8 +26,8 @@ export class UserController {
   }
 
   @Post('/')
-  appPost(@Body() user: IUser) {
-    console.log(user)
+  createUser(@Body() user: IUser) {
+    console.log(user);
     return this.client.send('add.new.user', user);
   }
 

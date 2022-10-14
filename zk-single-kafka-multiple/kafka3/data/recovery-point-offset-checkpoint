@@ -1,5 +1,5 @@
 0
-52
+53
 __consumer_offsets 22 0
 __consumer_offsets 30 0
 __consumer_offsets 8 0
@@ -37,6 +37,7 @@ __consumer_offsets 13 0
 __consumer_offsets 2 0
 __consumer_offsets 43 0
 __consumer_offsets 6 0
+auth.login.reply 0 0
 __consumer_offsets 14 0
 __consumer_offsets 20 0
 __consumer_offsets 0 0
@@ -50,5 +51,5 @@ __consumer_offsets 26 0
 __consumer_offsets 29 0
 __consumer_offsets 34 0
 __consumer_offsets 10 0
-__consumer_offsets 32 1
+__consumer_offsets 32 0
 __consumer_offsets 40 0

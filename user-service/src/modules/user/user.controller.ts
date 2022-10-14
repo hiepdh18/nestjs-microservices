@@ -1,12 +1,17 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import {
+  Ctx,
+  KafkaContext,
+  MessagePattern,
+  Payload,
+} from '@nestjs/microservices';
 import { IKafkaMessage } from 'src/interfaces/kafka-message.interface';
 import { IUser } from './interfaces/user.interface';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   @MessagePattern('get.user.list')
   getUsers() {
@@ -14,8 +19,12 @@ export class UserController {
   }
 
   @MessagePattern('add.new.user')
-  addUser(@Payload() message: IKafkaMessage<IUser>) {
-    console.log(message.value)
+  addUser(
+    @Payload() message: IKafkaMessage<IUser>,
+    @Ctx() context: KafkaContext,
+  ) {
+    console.log(message);
+    console.log(context);
     return this.userService.addUser(message.value);
   }
 }
