@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
+import { IUser } from './interfaces/user.interface';
 
 @Controller('user')
 export class UserController {
@@ -25,7 +26,7 @@ export class UserController {
   }
 
   @Post('/')
-  appPost(@Body() user: any) {
+  appPost(@Body() user: IUser) {
     console.log(user)
     return this.client.send('add.new.user', user);
   }

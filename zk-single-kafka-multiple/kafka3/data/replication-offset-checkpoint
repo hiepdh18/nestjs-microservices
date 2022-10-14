@@ -11,7 +11,7 @@ __consumer_offsets 9 0
 __consumer_offsets 46 0
 __consumer_offsets 25 0
 __consumer_offsets 35 0
-add.new.user.reply 0 15
+add.new.user.reply 0 16
 __consumer_offsets 41 0
 __consumer_offsets 33 0
 __consumer_offsets 23 0
@@ -27,7 +27,7 @@ __consumer_offsets 18 0
 __consumer_offsets 37 0
 __consumer_offsets 15 0
 __consumer_offsets 24 0
-__consumer_offsets 38 31
+__consumer_offsets 38 33
 __consumer_offsets 17 0
 __consumer_offsets 48 0
 __confluent.support.metrics 0 0
@@ -50,5 +50,5 @@ __consumer_offsets 26 0
 __consumer_offsets 29 0
 __consumer_offsets 34 0
 __consumer_offsets 10 0
-__consumer_offsets 32 27
+__consumer_offsets 32 29
 __consumer_offsets 40 0
