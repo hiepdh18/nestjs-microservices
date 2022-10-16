@@ -19,16 +19,17 @@ export class UserController {
   client: ClientKafka;
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('add.new.user');
+    this.client.subscribeToResponseOf('create.user');
     this.client.subscribeToResponseOf('get.user.list');
 
     await this.client.connect();
   }
 
   @Post('/')
-  createUser(@Body() user: IUser) {
+  createUser(@Body() user: any) {
     console.log(user);
-    return this.client.send('add.new.user', user);
+    const test = this.client.send('create.user', user);
+    return test;
   }
 
   @Get('/')

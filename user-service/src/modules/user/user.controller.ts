@@ -1,3 +1,4 @@
+import { CreateUserDto } from './dtos/create-user.dto';
 import { Controller } from '@nestjs/common';
 import {
   Ctx,
@@ -18,13 +19,10 @@ export class UserController {
     return this.userService.getList();
   }
 
-  @MessagePattern('add.new.user')
-  addUser(
-    @Payload() message: IKafkaMessage<IUser>,
-    @Ctx() context: KafkaContext,
-  ) {
+  @MessagePattern('create.user')
+  addUser(@Payload() message: CreateUserDto, @Ctx() context: KafkaContext) {
     console.log(message);
     console.log(context);
-    return this.userService.addUser(message.value);
+    return this.userService.createUser(message);
   }
 }

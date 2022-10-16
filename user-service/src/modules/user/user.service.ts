@@ -1,6 +1,11 @@
+import { CreateUserDto } from './dtos/create-user.dto';
 import { Injectable } from '@nestjs/common';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
 import { IUser } from './interfaces/user.interface';
+import { UserReturnDto } from './dtos/user-return.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -19,7 +24,9 @@ export class UserService {
   })
   client: ClientKafka;
 
-  constructor() {
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {
     this.users = [];
   }
 
@@ -29,9 +36,12 @@ export class UserService {
     await this.client.connect();
   }
 
-  addUser(user: IUser): IUser {
-    this.users.push(user);
-    return this.users[this.users.length - 1];
+  async createUser(user: CreateUserDto): Promise<UserReturnDto> {
+    console.log(user);
+    const newUser = await this.userRepository.create(user);
+    const res = await this.userRepository.save(newUser);
+
+    return new UserReturnDto(res);
   }
 
   getList() {
