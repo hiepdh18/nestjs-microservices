@@ -1,0 +1,1 @@
+docker run -d --name postgres -e POSTGRES_USER=dev -e POSTGRES_PASSWORD=owllocal -p 5432:5432 -e POSTGRES_DB=owldb -e PGDATA=/var/lib/postgresql/data/pgdata -v /data:/var/lib/postgresql/data -d postgres

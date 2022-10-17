@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
-import { IUser } from './interfaces/user.interface';
 
 @Controller('user')
 export class UserController {
@@ -26,10 +25,8 @@ export class UserController {
   }
 
   @Post('/')
-  createUser(@Body() user: any) {
-    console.log(user);
-    const test = this.client.send('create.user', user);
-    return test;
+  async createUser(@Body() user) {
+    return await this.client.send('create.user', user);
   }
 
   @Get('/')

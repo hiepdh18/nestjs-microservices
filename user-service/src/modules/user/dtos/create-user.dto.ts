@@ -1,7 +1,7 @@
 import { DTOMapper, MapFrom } from '../../../common/base/BaseDtoMapper';
 
 export class CreateUserDto extends DTOMapper {
-  @MapFrom((data) => data.email.email)
+  @MapFrom()
   email: string;
 
   @MapFrom()

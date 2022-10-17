@@ -69,3 +69,23 @@ services:
       - ZK_HOSTS=zoo:2181
     depends_on:
       - zoo
+   
+#   postgres:
+#     image: postgres
+#     restart: always
+#     environment:
+#       POSTGRES_USER: dev
+#       POSTGRES_PASSWORD: owllocal
+#       PGDATA: /data/postgres
+#     volumes:
+#       - postgres:/data/postgres
+#     ports:
+#       - "5432:5432"
+#     networks:
+#       - postgres
+#     restart: unless-stopped
+# volumes:
+#   postgres:
+# networks:
+#   postgres:
+#     driver: bridge

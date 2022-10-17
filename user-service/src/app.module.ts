@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import config from './configs/typeorm.config';
+import { Role } from './modules/user/entities/role.entity';
+import { User } from './modules/user/entities/user.entity';
 
 import { UserModule } from './modules/user/user.module';
 
@@ -21,8 +23,8 @@ import { UserModule } from './modules/user/user.module';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      // entities: [User, Role],
-      entities: ['/**/*.entity.ts'],
+      entities: [User, Role],
+      // entities: ['/**/*.entity.{ts,js}'],
       synchronize: true,
       migrations: ['/src/db/migrations/*.ts'],
       subscribers: ['/src/db/subscriber/*.ts'],

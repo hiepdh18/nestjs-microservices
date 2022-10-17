@@ -1,18 +1,32 @@
+import { ClientKafka, KafkaContext } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateUserDto } from './dtos/create-user.dto';
 import { UserController } from './user.controller';
+import { UserService } from './user.service';
 
 describe('UserController', () => {
-  let controller: UserController;
+  let userController: UserController;
+
+  const mockUserService = {
+
+  }
+
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
-    }).compile();
+      providers: [UserService],
+    })
+      .overrideProvider(UserService)
+      .useValue(mockUserService)
+      .compile();
 
-    controller = module.get<UserController>(UserController);
+
+    userController = module.get<UserController>(UserController);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(userController).toBeDefined();
   });
+
 });

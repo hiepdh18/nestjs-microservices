@@ -11,11 +11,11 @@ const config: PostgresConnectionOptions = {
   username: process.env.POSTGRES_USERNAME,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  // entities: [User, Role],
-  entities: ['/src/**/*.entity.ts'],
-  synchronize: true,
-  migrations: ['/src/db/migrations/*.ts'],
-  subscribers: ['/src/db/subscriber/*.ts'],
+  entities: [User, Role],
+  // entities: ['src/**/*.entity.ts'],
+  synchronize: false,
+  // migrations: ['/src/db/migrations/*.ts'],
+  // subscribers: ['/src/db/subscriber/*.ts'],
 };
 
 export default config;

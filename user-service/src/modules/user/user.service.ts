@@ -9,7 +9,6 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  users: Array<IUser>;
   @Client({
     transport: Transport.KAFKA,
     options: {
@@ -27,7 +26,6 @@ export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {
-    this.users = [];
   }
 
   async onModuleInit() {
@@ -36,12 +34,15 @@ export class UserService {
     await this.client.connect();
   }
 
-  async createUser(user: CreateUserDto): Promise<UserReturnDto> {
-    console.log(user);
-    const newUser = await this.userRepository.create(user);
-    const res = await this.userRepository.save(newUser);
+  async createUser(user: CreateUserDto): Promise<any> {
+    try {
+      const newUser = await this.userRepository.create(user);
+      const res = await this.userRepository.save(newUser);
 
-    return new UserReturnDto(res);
+      return JSON.stringify(new UserReturnDto(res));
+    } catch (error) {
+      throw new Error(error)
+    }
   }
 
   getList() {

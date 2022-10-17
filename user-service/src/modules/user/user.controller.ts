@@ -20,9 +20,9 @@ export class UserController {
   }
 
   @MessagePattern('create.user')
-  addUser(@Payload() message: CreateUserDto, @Ctx() context: KafkaContext) {
-    console.log(message);
-    console.log(context);
-    return this.userService.createUser(message);
+  async createUser(@Payload() message: CreateUserDto, @Ctx() context: KafkaContext) {
+    const a = await this.userService.createUser(message);
+    console.log('test', a)
+    return a;
   }
 }

@@ -1,5 +1,5 @@
 import { Role } from './role.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -15,15 +15,16 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
-  avatar: string;
+  @Column({ default: true })
+  avatar: string = '';
 
   @Column()
-  createdAt: Date;
+  createdAt: Date = new Date();
 
   @Column()
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 
-  @ManyToMany(() => Role, (role) => role.users)
-  roles: Role[];
+  // @ManyToMany(() => Role, (role) => role.users)
+  // @JoinTable()
+  // roles: Role[];
 }
