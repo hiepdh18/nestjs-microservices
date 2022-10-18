@@ -3,26 +3,22 @@ import { Client, ClientKafka, Transport } from '@nestjs/microservices';
 
 @Controller('user')
 export class UserController {
-
-  constructor(
-    
-    @Inject('USER_SERVICE') private client: ClientKafka,
-  ) { }
+  constructor(@Inject('USER_SERVICE') private userService: ClientKafka) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('create.user');
-    this.client.subscribeToResponseOf('get.user.list');
+    this.userService.subscribeToResponseOf('create.user');
+    this.userService.subscribeToResponseOf('get.users');
 
-    await this.client.connect();
+    await this.userService.connect();
   }
 
   @Post('/')
   async createUser(@Body() user) {
-    return await this.client.send('create.user', user);
+    return await this.userService.send('create.user', user);
   }
 
   @Get('/')
   getList() {
-    return this.client.send('get.user.list', '');
+    return this.userService.send('get.users', '');
   }
 }

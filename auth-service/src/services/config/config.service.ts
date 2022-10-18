@@ -4,11 +4,7 @@ export class ConfigService {
   private readonly envConfig: { [key: string]: any } = null;
 
   constructor() {
-    this.envConfig = {
-      // port: process.env.USER_SERVICE_PORT,
-    };
-    // this.envConfig.baseUri = process.env.BASE_URI;
-    // this.envConfig.gatewayPort = process.env.API_GATEWAY_PORT;
+    this.envConfig = {};
     this.envConfig.userService = {
       options: {
         client: {
@@ -16,17 +12,6 @@ export class ConfigService {
         },
         consumer: {
           groupId: 'user-consumer',
-        },
-      },
-      transport: Transport.KAFKA,
-    };
-    this.envConfig.authService = {
-      options: {
-        client: {
-          brokers: ['localhost:9092'],
-        },
-        consumer: {
-          groupId: 'auth-consumer',
         },
       },
       transport: Transport.KAFKA,

@@ -1,5 +1,5 @@
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import * as dotenv from 'dotenv';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 dotenv.config();
 
 const config: PostgresConnectionOptions = {
@@ -11,10 +11,10 @@ const config: PostgresConnectionOptions = {
   database: process.env.POSTGRES_DB,
   // got some problems here
   // entities: ['/src/**/*.entity.{ts,js}'],
-  // entities: [`${__dirname}/**/*.entity{.ts,.js}`], 
+  // entities: [`${__dirname}/**/*.entity{.ts,.js}`],
   synchronize: true,
   migrations: ['/src/db/migrations/*.ts'],
   subscribers: ['/src/db/subscriber/*.ts'],
-}
+};
 
 export default config;

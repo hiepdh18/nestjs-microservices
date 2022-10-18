@@ -1,20 +1,35 @@
-import { Controller, Get } from '@nestjs/common';
-import { Ctx, KafkaContext, MessagePattern, Payload } from '@nestjs/microservices';
+import { Controller } from '@nestjs/common';
+import {
+  Ctx,
+  KafkaContext,
+  MessagePattern,
+  Payload,
+} from '@nestjs/microservices';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { UserReturnDto } from './dtos/user-return.dto';
 import { UserService } from './services/user.service';
 
 @Controller('user')
 export class AppController {
-  constructor(private userService: UserService) { }
-
-  @MessagePattern('get.user.list')
-  getUsers() {
-    return this.userService.getList();
-  }
+  constructor(private userService: UserService) {}
 
   @MessagePattern('create.user')
-  async createUser(@Payload() message: CreateUserDto, @Ctx() context: KafkaContext) {
-    return await this.userService.createUser(message);
+  async createUser(
+    @Payload() message: CreateUserDto,
+    @Ctx() context: KafkaContext,
+  ) {
+    const res = await this.userService.createUser(message);
+    console.log(res);
+
+    return JSON.stringify(res);
+  }
+
+  @MessagePattern('get.users')
+  async getUsers() {
+    return await this.userService.findAllUser();
+  }
+
+  @MessagePattern('get.user')
+  async getUser(@Payload() message) {
+    return await this.userService.findOneUser(message);
   }
 }
