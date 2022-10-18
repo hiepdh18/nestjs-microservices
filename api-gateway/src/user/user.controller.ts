@@ -1,21 +1,13 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
 
 @Controller('user')
 export class UserController {
-  @Client({
-    transport: Transport.KAFKA,
-    options: {
-      client: {
-        clientId: 'user',
-        brokers: ['localhost:9092'],
-      },
-      consumer: {
-        groupId: 'user-consumer',
-      },
-    },
-  })
-  client: ClientKafka;
+
+  constructor(
+    
+    @Inject('USER_SERVICE') private client: ClientKafka,
+  ) { }
 
   async onModuleInit() {
     this.client.subscribeToResponseOf('create.user');

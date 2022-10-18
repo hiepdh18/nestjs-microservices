@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ClientProxyFactory, ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import config from './configs/typeorm.config';
-import { Role } from './modules/user/entities/role.entity';
-import { User } from './modules/user/entities/user.entity';
+import { User } from './entities/user.entity';
+import { ConfigService } from './services/config/config.service';
+import { UserService } from './services/user.service';
 
-import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -16,22 +16,21 @@ import { UserModule } from './modules/user/user.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USERNAME,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
-      entities: [User, Role],
-      // entities: ['/**/*.entity.{ts,js}'],
-      synchronize: true,
-      migrations: ['/src/db/migrations/*.ts'],
-      subscribers: ['/src/db/subscriber/*.ts'],
-    }),
-    UserModule,
+    TypeOrmModule.forRoot({ ...config, autoLoadEntities: true }),
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    UserService,
+    ConfigService,
+    {
+      provide: 'AUTH_SERVICE',
+      useFactory: (configService: ConfigService) => {
+        const authServiceOptions = configService.get('authService');
+        return ClientProxyFactory.create(authServiceOptions);
+      },
+      inject: [ConfigService],
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule { }
