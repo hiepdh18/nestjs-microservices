@@ -12,8 +12,8 @@ export class AuthController {
   }
 
   @Post('/password-login')
-  passwordLogin(@Body() body) {
-    return this.authService.send('login.password', {
+  async passwordLogin(@Body() body) {
+    return await this.authService.send('login.password', {
       email: body.email,
       password: body.password,
     });
