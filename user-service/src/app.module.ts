@@ -16,7 +16,7 @@ import { UserService } from './services/user.service';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({ ...config, autoLoadEntities: true }),
+    TypeOrmModule.forRoot(config),
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
