@@ -7,7 +7,11 @@ export class AppController {
   constructor(private readonly authService: AuthService) {}
 
   @MessagePattern('login.password')
-  async passwordLogin(@Payload() message) {
-    return { name: 'hiep' };
+  async passwordLogin(@Payload() body) {
+    // const user = { name: 'hiep' };
+    const user = await this.authService.findUser(body);
+    console.log(`🔥🔥🔥 => AppController => passwordLogin => user`, user);
+
+    return user;
   }
 }

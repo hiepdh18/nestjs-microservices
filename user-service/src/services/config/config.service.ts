@@ -9,16 +9,28 @@ export class ConfigService {
     };
     // this.envConfig.baseUri = process.env.BASE_URI;
     // this.envConfig.gatewayPort = process.env.API_GATEWAY_PORT;
+    // this.envConfig.authService = {
+    //   options: {
+    //     client: {
+    //       clientId: 'auth',
+    //       brokers: ['localhost:9092'],
+    //     },
+    //     consumer: {
+    //       groupId: 'auth-consumer',
+    //     },
+    //   },
+    //   transport: Transport.KAFKA,
+    // };
+
     this.envConfig.authService = {
       options: {
-        client: {
-          brokers: ['localhost:9092'],
-        },
-        consumer: {
-          groupId: 'auth-consumer',
+        urls: ['amqp://localhost:5672'],
+        queue: 'auth_queue',
+        queueOptions: {
+          durable: false,
         },
       },
-      transport: Transport.KAFKA,
+      transport: Transport.RMQ,
     };
   }
 

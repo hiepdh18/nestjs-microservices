@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { AppController } from './app.controller';
-import { AuthModule } from './modules/auth/auth.module';
 import { AuthService } from './services/auth.service';
 import { ConfigService } from './services/config/config.service';
 
 @Module({
-  imports: [AuthModule],
+  imports: [],
   controllers: [AppController],
   providers: [
     AuthService,

@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, OnModuleInit } from '@nestjs/common';
 import {
   Ctx,
   KafkaContext,
@@ -30,6 +30,8 @@ export class AppController {
 
   @MessagePattern('get.user')
   async getUser(@Payload() message) {
-    return await this.userService.findOneUser(message);
+    console.log(`🔥🔥🔥 => AppController => getUser => message`, message);
+    return JSON.stringify({ name: 'hiep' });
+    // return await this.userService.findOneUser(message);
   }
 }

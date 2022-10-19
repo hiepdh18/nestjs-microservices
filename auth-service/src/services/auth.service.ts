@@ -1,9 +1,19 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService {
   constructor(@Inject('USER_SERVICE') private userService: ClientKafka) {}
+
+  // async onModuleInit() {
+  //   this.userService.subscribeToResponseOf('get.user');
+
+  //   await this.userService.connect();
+  // }
+
+  // onModuleDestroy() {
+  //   this.userService.close();
+  // }
 
   async validateUser(payload: any): Promise<any> {
     try {
@@ -18,6 +28,10 @@ export class AuthService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async findUser(opts) {
+    return await this.userService.send('get.user', opts);
   }
   // async onModuleInit() {
   //   this.client.subscribeToResponseOf('auth.login');

@@ -1,4 +1,4 @@
-version: '3.2'
+version: "3.2"
 
 services:
   zoo:
@@ -7,9 +7,9 @@ services:
     ports:
       - "2181:2181"
     environment:
-        ZOO_MY_ID: 1
-        ZOO_PORT: 2181
-        ZOO_SERVERS: server.1=zoo:2888:3888
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=zoo:2888:3888
     volumes:
       - ./zk-single-kafka-multiple/zoo/data:/data
       - ./zk-single-kafka-multiple/zoo/datalog:/datalog
@@ -69,7 +69,6 @@ services:
       - ZK_HOSTS=zoo:2181
     depends_on:
       - zoo
-   
 #   postgres:
 #     image: postgres
 #     restart: always

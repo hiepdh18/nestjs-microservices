@@ -1,28 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from 'src/dtos/create-user.dto';
 import { UserReturnDto } from 'src/dtos/user-return.dto';
 import { UserRepository } from 'src/repositories/user.repository';
-import { Repository } from 'typeorm';
-import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
-    // @InjectRepository(UserRepository)
     private readonly userRepository: UserRepository,
-    // private readonly userRepository: UserRepository,
-    @Inject('AUTH_SERVICE') private client: ClientKafka,
-  ) {
-    console.log(`🔥🔥🔥 => UserService => userRepository`, userRepository);
-  }
+    @Inject('AUTH_SERVICE') private authService: ClientKafka,
+  ) {}
 
-  async onModuleInit() {
-    this.client.subscribeToResponseOf('auth.login');
+  // async onModuleInit() {
+  //   this.authService.subscribeToResponseOf('auth.login');
 
-    await this.client.connect();
-  }
+  //   await this.authService.connect();
+  // }
 
   async createUser(user: CreateUserDto): Promise<UserReturnDto> {
     try {
