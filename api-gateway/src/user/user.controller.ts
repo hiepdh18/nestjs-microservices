@@ -1,18 +1,11 @@
 import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientRMQ } from '@nestjs/microservices';
 
 @Controller('user')
 export class UserController {
   constructor(
-    @Inject('USER_SERVICE') private readonly userService: ClientKafka,
+    @Inject('USER_SERVICE') private readonly userService: ClientRMQ,
   ) {}
-
-  // async onModuleInit() {
-  //   this.userService.subscribeToResponseOf('create.user');
-  //   this.userService.subscribeToResponseOf('get.users');
-
-  //   await this.userService.connect();
-  // }
 
   @Post('/')
   async createUser(@Body() user) {

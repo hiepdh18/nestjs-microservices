@@ -11,12 +11,6 @@ export class UserService {
     @Inject('AUTH_SERVICE') private authService: ClientKafka,
   ) {}
 
-  // async onModuleInit() {
-  //   this.authService.subscribeToResponseOf('auth.login');
-
-  //   await this.authService.connect();
-  // }
-
   async createUser(user: CreateUserDto): Promise<UserReturnDto> {
     try {
       const newUser = await this.userRepository.create(user);
@@ -41,8 +35,10 @@ export class UserService {
 
   async findOneUser(opts): Promise<UserReturnDto> {
     try {
-      const user = await this.userRepository.findOne(opts);
+      const user = await this.userRepository.findOneBy(opts);
       return new UserReturnDto(user);
-    } catch (error) {}
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }

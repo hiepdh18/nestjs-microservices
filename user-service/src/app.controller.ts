@@ -1,9 +1,9 @@
-import { Controller, OnModuleInit } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import {
   Ctx,
-  KafkaContext,
   MessagePattern,
   Payload,
+  RmqContext,
 } from '@nestjs/microservices';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserService } from './services/user.service';
@@ -15,12 +15,9 @@ export class AppController {
   @MessagePattern('create.user')
   async createUser(
     @Payload() message: CreateUserDto,
-    @Ctx() context: KafkaContext,
+    @Ctx() context: RmqContext,
   ) {
-    const res = await this.userService.createUser(message);
-    console.log(res);
-
-    return JSON.stringify(res);
+    return await this.userService.createUser(message);
   }
 
   @MessagePattern('get.users')
@@ -29,9 +26,7 @@ export class AppController {
   }
 
   @MessagePattern('get.user')
-  async getUser(@Payload() message) {
-    console.log(`🔥🔥🔥 => AppController => getUser => message`, message);
-    return JSON.stringify({ name: 'hiep' });
-    // return await this.userService.findOneUser(message);
+  async getUser(@Payload() opts) {
+    return await this.userService.findOneUser(opts);
   }
 }

@@ -8,10 +8,6 @@ export class AppController {
 
   @MessagePattern('login.password')
   async passwordLogin(@Payload() body) {
-    // const user = { name: 'hiep' };
-    const user = await this.authService.findUser(body);
-    console.log(`🔥🔥🔥 => AppController => passwordLogin => user`, user);
-
-    return user;
+    return await this.authService.findUser(body);
   }
 }

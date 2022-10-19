@@ -5,30 +5,6 @@ export class ConfigService {
 
   constructor() {
     this.envConfig = {};
-    // this.envConfig.userService = {
-    //   options: {
-    //     client: {
-    //       clientId: 'user',
-    //       brokers: ['localhost:9092'],
-    //     },
-    //     consumer: {
-    //       groupId: 'user-consumer',
-    //     },
-    //   },
-    //   transport: Transport.KAFKA,
-    // };
-    // this.envConfig.authService = {
-    //   options: {
-    //     client: {
-    //       clientId: 'auth',
-    //       brokers: ['localhost:9092'],
-    //     },
-    //     consumer: {
-    //       groupId: 'auth-consumer',
-    //     },
-    //   },
-    //   transport: Transport.KAFKA,
-    // };
 
     this.envConfig.authService = {
       options: {
