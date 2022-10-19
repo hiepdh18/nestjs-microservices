@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserRepository } from 'src/repositories/user.repository';
 
 import { AppController } from './app.controller';
 import config from './configs/typeorm.config';
@@ -20,6 +21,7 @@ import { UserService } from './services/user.service';
   ],
   controllers: [AppController],
   providers: [
+    UserRepository,
     UserService,
     ConfigService,
     {
@@ -32,4 +34,4 @@ import { UserService } from './services/user.service';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}
