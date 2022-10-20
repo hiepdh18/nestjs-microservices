@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Patch, Post } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
+import { IUser } from './interfaces/user.interface';
 
 @Controller('user')
 export class UserController {
@@ -8,8 +9,13 @@ export class UserController {
   ) {}
 
   @Post('/')
-  async createUser(@Body() user) {
+  async createUser(@Body() user: IUser) {
     return await this.userService.send('create.user', user);
+  }
+
+  @Patch('/')
+  async updateUser(@Body() user: IUser) {
+    return await this.userService.send('update.user', user);
   }
 
   @Get('/')
