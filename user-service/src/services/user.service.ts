@@ -1,13 +1,16 @@
+import { DataSource } from 'typeorm';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateUserDto } from 'src/dtos/create-user.dto';
 import { UserReturnDto } from 'src/dtos/user-return.dto';
 import { UserRepository } from 'src/repositories/user.repository';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly dataSource: DataSource,
     @Inject('AUTH_SERVICE') private authService: ClientKafka,
   ) {}
 
@@ -36,6 +39,23 @@ export class UserService {
   async findOneUser(opts): Promise<UserReturnDto> {
     try {
       const user = await this.userRepository.findOneBy(opts);
+      return new UserReturnDto(user);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async updateUser(data): Promise<UserReturnDto> {
+    try {
+      if (!data.id) throw new Error();
+      await this.dataSource
+        .createQueryBuilder()
+        .update(User)
+        .set(data)
+        .where({ id: data.id })
+        .execute();
+
+      const user = await this.userRepository.findOneBy({ id: data.id });
       return new UserReturnDto(user);
     } catch (error) {
       throw new Error(error);
