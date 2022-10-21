@@ -5,15 +5,12 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { BackendLogger } from './common/logger/backend-logger';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserReturnDto } from './dtos/user-return.dto';
 import { UserService } from './services/user.service';
 
 @Controller('user')
 export class AppController {
-  private readonly logger = new BackendLogger(AppController.name);
-
   constructor(private userService: UserService) {}
 
   @MessagePattern('create.user')
@@ -40,6 +37,7 @@ export class AppController {
     @Payload() data,
     @Ctx() context: RmqContext,
   ): Promise<UserReturnDto> {
+    console.log(`🔥🔥🔥 => AppController => data`, data);
     return await this.userService.updateUser(data);
   }
 }
