@@ -1,10 +1,10 @@
-import { DataSource } from 'typeorm';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateUserDto } from 'src/dtos/create-user.dto';
 import { UserReturnDto } from 'src/dtos/user-return.dto';
-import { UserRepository } from 'src/repositories/user.repository';
 import { User } from 'src/entities/user.entity';
+import { UserRepository } from 'src/repositories/user.repository';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -18,7 +18,6 @@ export class UserService {
     try {
       const newUser = await this.userRepository.create(user);
       const res = await this.userRepository.save(newUser);
-
       return new UserReturnDto(res);
     } catch (error) {
       throw new Error(error);
