@@ -5,15 +5,11 @@ import { ClientKafka } from '@nestjs/microservices';
 export class AuthService {
   constructor(@Inject('USER_SERVICE') private userService: ClientKafka) {}
 
-  // async onModuleInit() {
-  //   this.userService.subscribeToResponseOf('get.user');
+  async onModuleInit() {
+    this.userService.subscribeToResponseOf('get.user');
 
-  //   await this.userService.connect();
-  // }
-
-  // onModuleDestroy() {
-  //   this.userService.close();
-  // }
+    await this.userService.connect();
+  }
 
   async validateUser(payload: any): Promise<any> {
     try {

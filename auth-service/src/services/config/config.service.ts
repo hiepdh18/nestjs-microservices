@@ -8,11 +8,11 @@ export class ConfigService {
     this.envConfig.userService = {
       options: {
         client: {
-          clientId: 'user',
+          clientId: 'usera',
           brokers: ['localhost:9091', 'localhost:9092', 'localhost:9093'],
         },
         consumer: {
-          groupId: 'user-consumer',
+          groupId: 'user-consumer1',
         },
       },
       transport: Transport.KAFKA,
