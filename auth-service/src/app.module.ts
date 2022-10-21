@@ -5,7 +5,6 @@ import { AuthService } from './services/auth.service';
 import { ConfigService } from './services/config/config.service';
 
 @Module({
-  imports: [],
   controllers: [AppController],
   providers: [
     AuthService,
