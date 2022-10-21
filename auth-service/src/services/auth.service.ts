@@ -1,12 +1,15 @@
 import axios from 'axios';
-import { Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { TokenDTO } from 'src/dtos/token.dto';
 import { ILogin } from 'src/interfaces/login.interface';
+import { HttpService } from '@nestjs/axios';
+import { catchError, lastValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly httpService: HttpService,
     @Inject('USER_SERVICE') private userService: ClientRMQ, // private readonly httpService: HttpService,
   ) {}
 
@@ -25,7 +28,8 @@ export class AuthService {
     }
   }
 
-  async passwordLogin(login: ILogin): Promise<TokenDTO> {
+  // async passwordLogin(login: ILogin): Promise<TokenDTO> {
+  async passwordLogin(login: ILogin): Promise<any> {
     const { email, password } = login;
     const options = {
       grant_type: 'password',
@@ -37,11 +41,18 @@ export class AuthService {
       scope: 'offline_access',
     };
 
-    const res = await axios.post(
-      `${process.env.AUTH0_DOMAIN}/oauth/token`,
-      options,
-    );
-    console.log(`🔥🔥🔥 => AuthService => passwordLogin => res`, res);
-    return new TokenDTO(res);
+    // const token = this.httpService
+    //   .post(`${process.env.AUTH0_DOMAIN}/oauth/token`, options)
+    //   .pipe(
+    //     catchError(() => {
+    //       throw new ForbiddenException('API not available');
+    //     }),
+    //   );
+
+    const res = this.httpService.get('https://catfact.ninja/fact').pipe();
+    const test = await lastValueFrom(res);
+    console.log(`🔥🔥🔥 => AuthService => passwordLogin => res`, test.data);
+    return test.data;
+    // return new TokenDTO(test.data);
   }
 }

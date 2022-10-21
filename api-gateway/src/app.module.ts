@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { AuthController } from './auth/auth.controller';
+import { services } from './common/constant/constants';
 import { ConfigService } from './config.service';
 import { UserController } from './user/user.controller';
 
@@ -10,7 +11,7 @@ import { UserController } from './user/user.controller';
   providers: [
     ConfigService,
     {
-      provide: 'USER_SERVICE',
+      provide: services.userService,
       useFactory: (configService: ConfigService) => {
         const userServiceOptions = configService.get('userService');
         return ClientProxyFactory.create(userServiceOptions);
@@ -18,7 +19,7 @@ import { UserController } from './user/user.controller';
       inject: [ConfigService],
     },
     {
-      provide: 'AUTH_SERVICE',
+      provide: services.authService,
       useFactory: (configService: ConfigService) => {
         const authServiceOptions = configService.get('authService');
         return ClientProxyFactory.create(authServiceOptions);

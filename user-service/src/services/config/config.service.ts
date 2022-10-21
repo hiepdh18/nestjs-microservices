@@ -1,31 +1,16 @@
 import { Transport } from '@nestjs/microservices';
+import { queues, rabbitURL } from 'src/common/constant/constants';
 
 export class ConfigService {
   private readonly envConfig: { [key: string]: any } = null;
 
   constructor() {
-    this.envConfig = {
-      // port: process.env.USER_SERVICE_PORT,
-    };
-    // this.envConfig.baseUri = process.env.BASE_URI;
-    // this.envConfig.gatewayPort = process.env.API_GATEWAY_PORT;
-    // this.envConfig.authService = {
-    //   options: {
-    //     client: {
-    //       clientId: 'auth',
-    //       brokers: ['localhost:9092'],
-    //     },
-    //     consumer: {
-    //       groupId: 'auth-consumer',
-    //     },
-    //   },
-    //   transport: Transport.KAFKA,
-    // };
+    this.envConfig = {};
 
     this.envConfig.authService = {
       options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'auth_queue',
+        urls: [rabbitURL],
+        queue: queues.authQueue,
         queueOptions: {
           durable: false,
         },

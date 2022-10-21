@@ -1,25 +1,19 @@
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { NestFactory } from '@nestjs/core';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import {
+  queues,
+  rabbitURL,
+} from './../../api-gateway/src/common/constant/constants';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
-      // transport: Transport.KAFKA,
-      // options: {
-      //   client: {
-      //     brokers: ['localhost:9091', 'localhost:9092', 'localhost:9093'],
-      //   },
-      //   consumer: {
-      //     groupId: 'auth-consumer',
-      //   },
-      // },
-
       transport: Transport.RMQ,
       options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'auth_queue',
+        urls: [rabbitURL],
+        queue: queues.authQueue,
         queueOptions: {
           durable: false,
         },

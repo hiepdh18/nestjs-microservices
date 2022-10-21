@@ -1,4 +1,5 @@
 import { Transport } from '@nestjs/microservices';
+import { queues, rabbitURL } from './common/constant/constants';
 
 export class ConfigService {
   private readonly envConfig: { [key: string]: any } = null;
@@ -8,8 +9,8 @@ export class ConfigService {
 
     this.envConfig.authService = {
       options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'auth_queue',
+        urls: [rabbitURL],
+        queue: queues.authQueue,
         queueOptions: {
           durable: false,
         },
@@ -18,8 +19,8 @@ export class ConfigService {
     };
     this.envConfig.userService = {
       options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'user_queue',
+        urls: [rabbitURL],
+        queue: queues.userQueue,
         queueOptions: {
           durable: false,
         },
