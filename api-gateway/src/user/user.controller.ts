@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Inject, Patch, Post } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { services } from 'src/common/constant/constants';
+import { IUpdateUser } from './interfaces/updateUser.interface';
 import { IUser } from './interfaces/user.interface';
 
 @Controller('user')
@@ -15,9 +16,8 @@ export class UserController {
   }
 
   @Patch('/')
-  async updateUser(@Body() user: IUser) {
-    console.log(`🔥🔥🔥 => UserController => updateUser => user`, user);
-    return await this.userService.send('update.user', user);
+  async updateUser(@Body() data: IUpdateUser) {
+    return await this.userService.send('update.user', data);
   }
 
   @Get('/')

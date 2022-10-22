@@ -34,7 +34,6 @@
     "amqp-connection-manager": "^4.1.7",
     "amqplib": "^0.10.3",
     "dayjs": "^1.11.5",
-    "kafkajs": "^2.2.1",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

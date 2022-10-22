@@ -1,5 +1,6 @@
+import { IUpdateUser } from './../../../api-gateway/src/user/interfaces/updateUser.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientRMQ } from '@nestjs/microservices';
 import { CreateUserDto } from 'src/dtos/create-user.dto';
 import { UserReturnDto } from 'src/dtos/user-return.dto';
 import { User } from 'src/entities/user.entity';
@@ -11,7 +12,7 @@ export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly dataSource: DataSource,
-    @Inject('AUTH_SERVICE') private authService: ClientKafka,
+    @Inject('AUTH_SERVICE') private authService: ClientRMQ,
   ) {}
 
   async createUser(user: CreateUserDto): Promise<UserReturnDto> {
@@ -27,7 +28,7 @@ export class UserService {
   async findAllUser(): Promise<UserReturnDto[]> {
     try {
       const users = await this.userRepository.find({
-        select: ['email', 'name'],
+        select: ['email', 'name', 'id'],
       });
       return users.map((user) => new UserReturnDto(user));
     } catch (error) {
@@ -44,20 +45,12 @@ export class UserService {
     }
   }
 
-  async updateUser(data): Promise<UserReturnDto> {
-    try {
-      if (!data.id) throw new Error();
-      await this.dataSource
-        .createQueryBuilder()
-        .update(User)
-        .set(data)
-        .where({ id: data.id })
-        .execute();
+  async updateUser(id: string, opts: any): Promise<UserReturnDto> {
+    if (!id) throw new Error();
+    // const user = await this.userRepository.findOneBy({ id });
+    // const newUser = this.userRepository.save({ ...user, ...opts });
 
-      const user = await this.userRepository.findOneBy({ id: data.id });
-      return new UserReturnDto(user);
-    } catch (error) {
-      throw new Error(error);
-    }
+    // const user = await this.userRepository.findOneBy({ id: data.id });
+    return new UserReturnDto({});
   }
 }

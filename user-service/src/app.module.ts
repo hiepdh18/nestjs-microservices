@@ -1,4 +1,3 @@
-import { services } from './../../api-gateway/src/common/constant/constants';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientProxyFactory } from '@nestjs/microservices';
@@ -26,7 +25,7 @@ import { UserService } from './services/user.service';
     UserService,
     ConfigService,
     {
-      provide: services.authService,
+      provide: 'AUTH_SERVICE',
       useFactory: (configService: ConfigService) => {
         const authServiceOptions = configService.get('authService');
         return ClientProxyFactory.create(authServiceOptions);

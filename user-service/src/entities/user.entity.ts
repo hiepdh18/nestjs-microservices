@@ -15,7 +15,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: '' })
+  @Column()
   avatar: string;
 
   @Column()
@@ -26,4 +26,8 @@ export class User {
 
   @ManyToMany(() => Role, (role) => role.users)
   roles: Role[];
+
+  constructor() {
+    this.avatar = '';
+  }
 }

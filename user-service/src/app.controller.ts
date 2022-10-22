@@ -7,6 +7,7 @@ import {
 } from '@nestjs/microservices';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserReturnDto } from './dtos/user-return.dto';
+import { IUpdateUser } from './interfaces/updateUser.interface';
 import { UserService } from './services/user.service';
 
 @Controller('user')
@@ -34,10 +35,11 @@ export class AppController {
 
   @MessagePattern('update.user')
   async updateUser(
-    @Payload() data,
-    @Ctx() context: RmqContext,
+    @Payload() data: IUpdateUser,
+    // @Ctx() context: RmqContext,
   ): Promise<UserReturnDto> {
     console.log(`🔥🔥🔥 => AppController => data`, data);
-    return await this.userService.updateUser(data);
+    const { id, user } = data;
+    return await this.userService.updateUser(id, user);
   }
 }

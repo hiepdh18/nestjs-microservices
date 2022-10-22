@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
-import { queues, rabbitURL } from './common/constant/constants';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -9,8 +8,8 @@ async function bootstrap() {
     {
       transport: Transport.RMQ,
       options: {
-        urls: [rabbitURL],
-        queue: queues.userQueue,
+        urls: ['amqp://localhost:5672'],
+        queue: 'user_queue',
         queueOptions: {
           durable: false,
         },
