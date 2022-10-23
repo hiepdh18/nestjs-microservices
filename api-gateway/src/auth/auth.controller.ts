@@ -1,10 +1,11 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
+import { services } from 'src/common/constant/constants';
 import { ILogin } from './interfaces/login.interface';
 
 @Controller('auth')
 export class AuthController {
-  constructor(@Inject('AUTH_SERVICE') private authService: ClientRMQ) {}
+  constructor(@Inject(services.authService) private authService: ClientRMQ) {}
 
   @Post('/password-login')
   async passwordLogin(@Body() body: ILogin) {

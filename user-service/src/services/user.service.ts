@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
+import { services } from 'src/common/constant/constants';
 import { CreateUserDto } from 'src/dtos/create-user.dto';
 import { UserReturnDto } from 'src/dtos/user-return.dto';
 import { UserRepository } from 'src/repositories/user.repository';
@@ -10,7 +11,7 @@ export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly dataSource: DataSource,
-    @Inject('AUTH_SERVICE') private authService: ClientRMQ,
+    @Inject(services.authService) private authService: ClientRMQ,
   ) {}
 
   async createUser(user: CreateUserDto): Promise<UserReturnDto> {
@@ -37,6 +38,7 @@ export class UserService {
   async findOneUser(opts): Promise<UserReturnDto> {
     try {
       const user = await this.userRepository.findOneBy(opts);
+      console.log(`🔥🔥🔥 => UserService => findOneUser => user`, user);
       return new UserReturnDto(user);
     } catch (error) {
       throw new Error(error);
@@ -46,8 +48,7 @@ export class UserService {
   async updateUser(id: string, opts: any): Promise<UserReturnDto> {
     if (!id) throw new Error();
     const user = await this.userRepository.findOneBy({ id });
-    const newUser = this.userRepository.save({ ...user, ...opts });
-    // console.log(`🔥🔥🔥 => UserService => updateUser => newUser`, newUser);
+    const newUser = await this.userRepository.save({ ...user, ...opts });
 
     // const user = await this.userRepository.findOneBy({ id: data.id });
     return new UserReturnDto(newUser);

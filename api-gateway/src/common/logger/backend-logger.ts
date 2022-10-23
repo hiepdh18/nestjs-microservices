@@ -4,8 +4,9 @@ import { REQUEST_ID, SESSION_USER } from 'src/common/constant/constants';
 // import { SessionMiddleware } from 'common/middleware/session.middleware';
 import * as dayjs from 'dayjs';
 // import { User } from 'modules/user/schemas/user.schema';
-import * as winston from 'winston';
 // import ecsFormat from '@elastic/ecs-winston-format';
+import * as winston from 'winston';
+import 'winston-daily-rotate-file';
 import DailyRotateFile from 'winston-daily-rotate-file';
 
 const formatter = (info) => {
@@ -31,43 +32,18 @@ const customFormat = winston.format.combine(
   winston.format.printf((info) => formatter(info)),
 );
 
+const transport: DailyRotateFile = new winston.transports.DailyRotateFile({
+  filename: 'logs/server.log',
+  format: winston.format.combine(winston.format.uncolorize()),
+  level: 'error',
+  datePattern: 'YYYY-MM-DD',
+  maxFiles: 10,
+});
+
 export class BackendLogger extends Logger {
   public static winstonLogger = winston.createLogger({
-    level: 'error',
     format: customFormat,
-    // format: ecsFormat(),
-    transports: [
-      new DailyRotateFile({
-        filename: 'logs/server.log',
-        format: winston.format.combine(winston.format.uncolorize()),
-        level: 'error',
-        datePattern: 'YYYY-MM-DD',
-        maxFiles: 10,
-      }),
-      // new winston.transports.DailyRotateFile({
-      //   filename: 'logs/serverAll.log',
-      //   format: winston.format.combine(winston.format.uncolorize()),
-      //   level: 'silly',
-      //   datePattern: 'YYYY-MM-DD',
-      //   maxFiles: 10,
-      // }),
-
-      // new winston.transports.File({
-      //   filename: 'logs/serverAll.log',
-      //   format: winston.format.combine(winston.format.uncolorize()),
-      //   tailable: false,
-      //   level: 'silly',
-      //   maxFiles: 30,
-      //   maxsize: 5 * 1024 * 1024, // 5 MB
-      // }),
-      // new winston.transports.DailyRotateFile({
-      //   filename: 'logs/combined-%DATE%.log',
-      //   level: 'error',
-      //   datePattern: 'YYYY-MM-DD-HH',
-      //   frequency: '72h',
-      //   maxFiles: 1,
-      // }),
-    ],
+    transports: [transport],
   });
 
   private ctx: string;
@@ -79,7 +55,7 @@ export class BackendLogger extends Logger {
 
   winstonLog(
     message: string,
-    level: 'silly' | 'verbose' | 'debug' | 'warn' | 'error',
+    level: 'silly' | 'debug' | 'verbose' | 'http' | 'info' | 'warn' | 'error',
     trace?: string,
   ) {
     BackendLogger.winstonLogger.log({
@@ -90,19 +66,9 @@ export class BackendLogger extends Logger {
     });
   }
 
-  silly(message: string) {
-    this.winstonLog(message, 'silly');
-    super.log(message);
-  }
-
-  debug(message: string) {
-    this.winstonLog(message, 'debug');
-    super.log(message);
-  }
-
-  log(message: string) {
-    this.winstonLog(message, 'verbose');
-    super.log(message);
+  error(message: string, trace: string) {
+    this.winstonLog(message, 'error', trace);
+    super.error(message, trace);
   }
 
   warn(message: string) {
@@ -110,8 +76,50 @@ export class BackendLogger extends Logger {
     super.warn(message);
   }
 
-  error(message: string, trace: string) {
-    this.winstonLog(message, 'error', trace);
-    super.error(message, trace);
+  info(message: string) {
+    this.winstonLog(message, 'info');
+    super.log(message);
+  }
+  http(message: string) {
+    this.winstonLog(message, 'http');
+    super.log(message);
+  }
+  verbose(message: string) {
+    this.winstonLog(message, 'verbose');
+    super.verbose(message);
+  }
+
+  debug(message: string) {
+    this.winstonLog(message, 'debug');
+    super.debug(message);
+  }
+
+  silly(message: string) {
+    this.winstonLog(message, 'silly');
+    super.log(message);
   }
 }
+
+// new winston.transports.DailyRotateFile({
+//   filename: 'logs/serverAll.log',
+//   format: winston.format.combine(winston.format.uncolorize()),
+//   level: 'silly',
+//   datePattern: 'YYYY-MM-DD',
+//   maxFiles: 10,
+// }),
+
+// new winston.transports.File({
+//   filename: 'logs/serverAll.log',
+//   format: winston.format.combine(winston.format.uncolorize()),
+//   tailable: false,
+//   level: 'silly',
+//   maxFiles: 30,
+//   maxsize: 5 * 1024 * 1024, // 5 MB
+// }),
+// new winston.transports.DailyRotateFile({
+//   filename: 'logs/combined-%DATE%.log',
+//   level: 'error',
+//   datePattern: 'YYYY-MM-DD-HH',
+//   frequency: '72h',
+//   maxFiles: 1,
+// }),

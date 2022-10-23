@@ -19,7 +19,6 @@ export class AppController {
     @Payload() message: CreateUserDto,
     @Ctx() context: RmqContext,
   ) {
-    console.log(`🔥🔥🔥 => AppController => message`, message);
     return await this.userService.createUser(message);
   }
 
@@ -33,12 +32,16 @@ export class AppController {
     return await this.userService.findOneUser(opts);
   }
 
+  @MessagePattern('get.user.by.email')
+  async getUserByEmail(@Payload() email) {
+    return await this.userService.findOneUser({ email });
+  }
+
   @MessagePattern('update.user')
   async updateUser(
     @Payload() data: IUpdateUser,
     // @Ctx() context: RmqContext,
   ): Promise<UserReturnDto> {
-    console.log(`🔥🔥🔥 => AppController => data`, data);
     const { id, user } = data;
     return await this.userService.updateUser(id, user);
   }

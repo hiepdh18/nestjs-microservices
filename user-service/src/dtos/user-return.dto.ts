@@ -12,9 +12,6 @@ export class UserReturnDto extends DTOMapper {
   name: string;
 
   @MapFrom()
-  password: string;
-
-  @MapFrom()
   avatar: string;
 
   @MapFrom()
