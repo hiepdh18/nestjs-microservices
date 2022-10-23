@@ -1,9 +1,7 @@
-import { IUpdateUser } from './../../../api-gateway/src/user/interfaces/updateUser.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { CreateUserDto } from 'src/dtos/create-user.dto';
 import { UserReturnDto } from 'src/dtos/user-return.dto';
-import { User } from 'src/entities/user.entity';
 import { UserRepository } from 'src/repositories/user.repository';
 import { DataSource } from 'typeorm';
 
@@ -47,10 +45,11 @@ export class UserService {
 
   async updateUser(id: string, opts: any): Promise<UserReturnDto> {
     if (!id) throw new Error();
-    // const user = await this.userRepository.findOneBy({ id });
-    // const newUser = this.userRepository.save({ ...user, ...opts });
+    const user = await this.userRepository.findOneBy({ id });
+    const newUser = this.userRepository.save({ ...user, ...opts });
+    // console.log(`🔥🔥🔥 => UserService => updateUser => newUser`, newUser);
 
     // const user = await this.userRepository.findOneBy({ id: data.id });
-    return new UserReturnDto({});
+    return new UserReturnDto(newUser);
   }
 }
