@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { ClientRMQ } from '@nestjs/microservices';
+import { ClientRMQ, RpcException } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { services } from 'src/common/constant/constants';
 import { BackendLogger } from 'src/common/logger/backend-logger';
@@ -36,9 +36,7 @@ export class AuthService {
     const user = await lastValueFrom(
       this.userService.send('get.user.by.email', email).pipe(),
     );
-    this.logger.debug('hello');
-    console.log(`🔥🔥🔥 => AuthService => passwordLogin => user`, user);
-    if (isEmpty(user)) throw new UnauthorizedException('User does not exist!');
+    if (isEmpty(user)) throw new RpcException('Invalid credentials.');
     const options = {
       grant_type: 'password',
       username: email,
