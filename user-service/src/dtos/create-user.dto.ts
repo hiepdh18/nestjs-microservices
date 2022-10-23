@@ -1,12 +1,11 @@
-import { DTOMapper, MapFrom } from "src/common/base/BaseDtoMapper";
-
+import { DTOMapper, MapFrom } from 'src/common/base/BaseDtoMapper';
 
 export class CreateUserDto extends DTOMapper {
   @MapFrom()
   email: string;
 
   @MapFrom()
-  password: string;
+  password?: string;
 
   @MapFrom()
   name: string;

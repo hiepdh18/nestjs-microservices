@@ -1,36 +1,56 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Client, ClientKafka, Transport } from '@nestjs/microservices';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../entities/user.entity';
-import { Repository } from 'typeorm';
+import { ClientRMQ } from '@nestjs/microservices';
+import { services } from 'src/common/constant/constants';
 import { CreateUserDto } from 'src/dtos/create-user.dto';
 import { UserReturnDto } from 'src/dtos/user-return.dto';
+import { UserRepository } from 'src/repositories/user.repository';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
-    @Inject('AUTH_SERVICE') private client: ClientKafka,
-  ) { }
+    private readonly userRepository: UserRepository,
+    private readonly dataSource: DataSource,
+    @Inject(services.authService) private authService: ClientRMQ,
+  ) {}
 
-  async onModuleInit() {
-    this.client.subscribeToResponseOf('auth.login');
-
-    await this.client.connect();
-  }
-
-  async createUser(user: CreateUserDto): Promise<any> {
+  async createUser(user: CreateUserDto): Promise<UserReturnDto> {
     try {
       const newUser = await this.userRepository.create(user);
       const res = await this.userRepository.save(newUser);
-
-      return JSON.stringify(new UserReturnDto(res));
+      return new UserReturnDto(res);
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error);
     }
   }
 
-  getList() {
-    return this.client.send('auth.login', '');
+  async findAllUser(): Promise<UserReturnDto[]> {
+    try {
+      const users = await this.userRepository.find({
+        select: ['email', 'name', 'id'],
+      });
+      return users.map((user) => new UserReturnDto(user));
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findOneUser(opts): Promise<UserReturnDto> {
+    try {
+      const user = await this.userRepository.findOneBy(opts);
+      console.log(`🔥🔥🔥 => UserService => findOneUser => user`, user);
+      return new UserReturnDto(user);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async updateUser(id: string, opts: any): Promise<UserReturnDto> {
+    if (!id) throw new Error();
+    const user = await this.userRepository.findOneBy({ id });
+    const newUser = await this.userRepository.save({ ...user, ...opts });
+
+    // const user = await this.userRepository.findOneBy({ id: data.id });
+    return new UserReturnDto(newUser);
   }
 }

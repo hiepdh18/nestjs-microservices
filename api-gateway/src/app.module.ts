@@ -1,23 +1,31 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './user/user.controller';
+import { ClientProxyFactory } from '@nestjs/microservices';
 import { AuthController } from './auth/auth.controller';
-import { ClientProxyFactory, ClientsModule, Transport } from '@nestjs/microservices';
+import { services } from './common/constant/constants';
 import { ConfigService } from './config.service';
+import { UserController } from './user/user.controller';
 
 @Module({
-  imports: [
-  ],
+  imports: [],
   controllers: [UserController, AuthController],
   providers: [
     ConfigService,
     {
-      provide: 'USER_SERVICE',
+      provide: services.userService,
       useFactory: (configService: ConfigService) => {
         const userServiceOptions = configService.get('userService');
         return ClientProxyFactory.create(userServiceOptions);
       },
       inject: [ConfigService],
     },
+    {
+      provide: services.authService,
+      useFactory: (configService: ConfigService) => {
+        const authServiceOptions = configService.get('authService');
+        return ClientProxyFactory.create(authServiceOptions);
+      },
+      inject: [ConfigService],
+    },
   ],
 })
-export class AppModule { }
+export class AppModule {}

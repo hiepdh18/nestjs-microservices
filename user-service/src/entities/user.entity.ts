@@ -1,5 +1,5 @@
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from './role.entity';
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -15,8 +15,8 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: true })
-  avatar: string = '';
+  @Column()
+  avatar: string;
 
   @Column()
   createdAt: Date = new Date();
@@ -24,7 +24,10 @@ export class User {
   @Column()
   updatedAt: Date = new Date();
 
-  // @ManyToMany(() => Role, (role) => role.users)
-  // @JoinTable()
-  // roles: Role[];
+  @ManyToMany(() => Role, (role) => role.users)
+  roles: Role[];
+
+  constructor() {
+    this.avatar = '';
+  }
 }
