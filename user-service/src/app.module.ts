@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from 'src/repositories/user.repository';
 
 import { AppController } from './app.controller';
+import { services } from './common/constant/constants';
 import config from './configs/typeorm.config';
 import { User } from './entities/user.entity';
 import { ConfigService } from './services/config/config.service';
@@ -25,7 +26,7 @@ import { UserService } from './services/user.service';
     UserService,
     ConfigService,
     {
-      provide: 'AUTH_SERVICE',
+      provide: services.authService,
       useFactory: (configService: ConfigService) => {
         const authServiceOptions = configService.get('authService');
         return ClientProxyFactory.create(authServiceOptions);
