@@ -1,23 +1,57 @@
 version: "3.8"
 services:
+  api-gateway:
+    image: api-gateway
+    ports:
+      - 3000:3000
+    networks:
+      - rabbit-net
+    depends_on:
+      - rabbitmq
+  auth_service:
+    image: auth_service
+    networks:
+      - rabbit-net
+    depends_on:
+      - rabbitmq
+    restart: always
+  user_service:
+    image: user_service
+    networks:
+      - rabbit-net
+      - postgresql-net
+    depends_on:
+      - postgres
+      - rabbitmq
+    restart: always
+    
   rabbitmq:
     image: rabbitmq:3.8.25-management-alpine
-    container_name: "rabbitmq"
+    hostname: rabbitmq
     ports:
       - 5672:5672
       - 15672:15672
     volumes:
       - .rabbitmq/data/:/var/lib/rabbitmq/
       - .rabbitmq/log/:/var/log/rabbitmq/
-
+    networks:
+      - rabbit-net
   postgres:
-    container_name: postgres
     image: postgres:14.5-alpine
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: dev
       PGDATA: /data/postgres
+    networks:
+      - postgresql-net
+    volumes:
+      - ./postgresql:/var/lib/postgresql
     ports:
       - 5432:5432
     restart: unless-stopped
+networks:
+  postgresql-net:
+    driver: bridge
+  rabbit-net:
+    driver: bridge

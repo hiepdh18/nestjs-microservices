@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 const env = process.env.PROD_ENV || 'sandbox';
+console.log(`🔥🔥🔥 => env`, env);
 
 export const services = {
   userService: 'USER_SERVICE',
@@ -19,7 +20,7 @@ export const EMM_NAMESPACE = 'emm-namespace';
 
 const rabbitURL_options = {
   sandbox: 'amqp://localhost:5672',
-  test: 'amqp://localhost:5672',
+  test: 'amqp://rabbitmq:5672',
   live: 'amqp://localhost:5672',
   stage: 'amqp://localhost:5672',
 };
