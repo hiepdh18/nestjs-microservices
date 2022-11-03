@@ -4,24 +4,23 @@ import { deepFind } from '../utils/util';
 
 const symbolFromMap = Symbol('SymbolFromMap');
 
-export type MapperFunction<A = any, B = any> = (data: A, prop: string) => B;
+type MapperFunction<A = any, B = any> = (data: A, prop: string) => B;
 
-export type MapperClass = new (...args) => any;
+type MapperClass = new (...args: any[]) => any;
 
-export const SIMPLE_DTO_MAPPER_FN: MapperFunction = (val) => val;
+const SIMPLE_DTO_MAPPER_FN: MapperFunction = (val) => val;
 
-export const getFromFn =
-  (propKey: string | MapperFunction) => (model: any, prop) =>
-    deepFind(model, propKey || prop);
+const getFromFn = (propKey: string | MapperFunction) => (model: any, prop) =>
+  deepFind(model, propKey || prop);
 
-export class ValueMappingFailedError extends Error {
+class ValueMappingFailedError extends Error {
   constructor(reason: string) {
     super(`Failed to map value: ${reason}`);
     Error.captureStackTrace(this);
   }
 }
 
-export interface MapperProp {
+interface MapperProp {
   mapper: MapperFunction | MapperClass;
   fromFn: MapperFunction;
   propKey: string;
@@ -29,30 +28,26 @@ export interface MapperProp {
   defaultVal?: any;
 }
 
-export interface MapperProps {
+interface MapperProps {
   [key: string]: MapperProp;
 }
 
-// tslint:disable-next-line:max-classes-per-file
 export class DTOMapper<DTOAttributes = any> {
   public mapperProps: MapperProps;
 
   constructor(data?: DTOAttributes) {
-    // init prop own
-    this.mapping(data);
-    Reflect.defineMetadata(symbolFromMap, this.mapping.bind(this), this);
+    this.mapData(data);
+    Reflect.defineMetadata(symbolFromMap, this.mapData.bind(this), this);
   }
 
-  protected mapping(data: any): any {
-    if (!data) {
-      return;
-    }
+  protected mapData(data: any): any {
+    if (!data) return;
 
-    if (this.mapperProps) {
+    if (this.mapperProps)
       for (const prop of Object.keys(this.mapperProps)) {
         if (this[prop] instanceof DTOMapper) {
           // support deep mapping
-          this.mappingChild(this, data, prop);
+          this.mapChild(this, data, prop);
           continue;
         }
         const value = this.getDataFromSource(data, this.mapperProps[prop]);
@@ -60,18 +55,16 @@ export class DTOMapper<DTOAttributes = any> {
           this[prop] = value;
         }
       }
-    }
   }
 
-  private mappingChild(object, data: any, prop: any): any {
+  private mapChild(object: any, data: any, prop: any): any {
     const value = this.getDataFromSource(data, this.mapperProps[prop]);
     if (typeof object[prop] !== 'undefined') {
       object[prop].from(value);
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private getDataFromSource(data: any, prop: MapperProp, ...agh): any {
+  private getDataFromSource(data: any, prop: MapperProp): any {
     let preValue = prop.defaultVal;
     try {
       preValue = prop.fromFn(data, prop.propKey);
@@ -95,29 +88,26 @@ export class DTOMapper<DTOAttributes = any> {
     return value;
   }
 
-  private mapMultipleValue(value, mapper: MapperFunction | MapperClass) {
-    if (_.isArray(value)) {
-      return value.map((val) => this.mapValue(val, mapper));
-    } else if (_.isObject(value)) {
-      return _.mapValues(value, (val) => this.mapValue(val, mapper));
-    }
-    return this.mapValue(value, mapper);
+  private mapMultipleValue(values, mapper: MapperFunction | MapperClass) {
+    if (_.isArray(values))
+      return values.map((value) => this.mapValue(value, mapper));
+    else if (_.isObject(values))
+      return _.mapValues(values, (value) => this.mapValue(value, mapper));
+
+    return this.mapValue(values, mapper);
   }
 
   private mapValue(value: any, mapper: MapperFunction | MapperClass) {
     try {
-      if (this.isClass(mapper)) {
-        return new (mapper as MapperClass)(value);
-      } else if (_.isFunction(mapper)) {
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        return (mapper as Function)(value);
-      }
+      if (this.isClass(mapper)) return new (mapper as MapperClass)(value);
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      else if (_.isFunction(mapper)) return (mapper as Function)(value);
     } catch (e) {
       throw new ValueMappingFailedError(e.message);
     }
   }
 
-  private isClass(fn: any) {
+  private isClass(fn: any): boolean {
     return /^\s*class/.test(fn.toString());
   }
 }
@@ -148,7 +138,7 @@ export function MapFrom(
 
 export type IDtoMapper<T = any> = new (source: T) => IDtoMapper<T>;
 
-export function MappedDto(target: any) {
+export function MappedDto(target: any): any {
   // save a reference to the original constructor
   const original = target;
 
