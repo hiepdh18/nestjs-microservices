@@ -111,9 +111,9 @@ export class DTOMapper<DTOAttributes = any> {
 
   private mapValue(value: any, mapper: MapperFunction | MapperClass) {
     try {
-      if (this.isClass(mapper)) return new (mapper as MapperClass)(value);
+      if (this.isClass(mapper)) return new (<MapperClass>mapper)(value);
       // eslint-disable-next-line @typescript-eslint/ban-types
-      else if (_.isFunction(mapper)) return (mapper as Function)(value);
+      else if (_.isFunction(mapper)) return (<Function>mapper)(value);
     } catch (e) {
       throw new ValueMappingFailedError(e.message);
     }
