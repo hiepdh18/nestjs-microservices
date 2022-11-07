@@ -24,11 +24,14 @@ type MapperClass = new (...args: any[]) => any;
 
 const SIMPLE_MAPPER_FN: MapperFunction = (val) => val;
 
-const getFromFn =
-  (propKey: string | MapperFunction) => (model: any, prop: any) =>
-    deepFind(model, propKey || prop);
+export const getFromFn =
+  (propKey: string | MapperFunction) => (model: any, prop: any) => {
+    console.log('hello');
 
-class ValueMappingFailedError extends Error {
+    return deepFind(model, propKey || prop);
+  };
+
+export class ValueMappingFailedError extends Error {
   constructor(reason: string) {
     super(`Failed to map value: ${reason}`);
     Error.captureStackTrace(this);
@@ -147,28 +150,28 @@ export function MapFrom(
   };
 }
 
-export type IDtoMapper<T = any> = new (source: T) => IDtoMapper<T>;
+// export type IDtoMapper<T = any> = new (source: T) => IDtoMapper<T>;
 
-export function MappedDto(target: any): any {
-  // save a reference to the original constructor
-  const original = target;
-  // the new constructor behaviour
-  const f: any = (...args: any[]) => {
-    const instance = new original(args);
-    if (instance.mapperProps) {
-      const mapper = new DTOMapper();
-      mapper.mapperProps = instance.mapperProps;
-      const __from__ = Reflect.getMetadata(symbolFromMap, mapper);
-      __from__(args[0]);
-      Object.assign(instance, mapper);
-      delete instance.mapperProps;
-    }
-    return instance;
-  };
+// export function MappedDto(target: any): any {
+//   // save a reference to the original constructor
+//   const original = target;
+//   // the new constructor behaviour
+//   const f: any = (...args: any[]) => {
+//     const instance = new original(args);
+//     if (instance.mapperProps) {
+//       const mapper = new DTOMapper();
+//       mapper.mapperProps = instance.mapperProps;
+//       const __from__ = Reflect.getMetadata(symbolFromMap, mapper);
+//       __from__(args[0]);
+//       Object.assign(instance, mapper);
+//       delete instance.mapperProps;
+//     }
+//     return instance;
+//   };
 
-  // copy prototype so intanceof operator still works
-  f.prototype = original.prototype;
+//   // copy prototype so intanceof operator still works
+//   f.prototype = original.prototype;
 
-  // return new constructor (will override original)
-  return f;
-}
+//   // return new constructor (will override original)
+//   return f;
+// }
