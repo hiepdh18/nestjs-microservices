@@ -63,11 +63,6 @@ export class DTOMapper<DTOAttributes = any> {
 
     if (this.mapperProps)
       for (const prop of Object.keys(this.mapperProps)) {
-        if (this[prop] instanceof DTOMapper) {
-          // support deep mapping
-          this.mapChild(this, data, prop);
-          continue;
-        }
         const value = this.getDataFromSource(data, this.mapperProps[prop]);
         if (typeof value !== 'undefined') {
           this[prop] = value;
@@ -75,21 +70,8 @@ export class DTOMapper<DTOAttributes = any> {
       }
   }
 
-  private mapChild(object: any, data: any, prop: any): any {
-    const value = this.getDataFromSource(data, this.mapperProps[prop]);
-    if (typeof object[prop] !== 'undefined') {
-      object[prop].from(value);
-    }
-  }
-
   private getDataFromSource(data: any, prop: MapperProp): any {
-    let preValue = prop.defaultVal;
-    try {
-      preValue = prop.fromFn(data, prop.propKey);
-    } catch (ex) {
-      console.log('ERROR MAPPING ATTR', ex);
-    }
-
+    const preValue = prop.fromFn(data, prop.propKey);
     const rawValue = !_.isUndefined(preValue) ? preValue : prop.defaultVal;
 
     if (_.isObject(rawValue) && _.isEmpty(rawValue) && prop.isMultiple) {
@@ -150,28 +132,26 @@ export function MapFrom(
   };
 }
 
-// export type IDtoMapper<T = any> = new (source: T) => IDtoMapper<T>;
+export type IDtoMapper<T = any> = new (source: T) => IDtoMapper<T>;
 
-// export function MappedDto(target: any): any {
-//   // save a reference to the original constructor
-//   const original = target;
-//   // the new constructor behaviour
-//   const f: any = (...args: any[]) => {
-//     const instance = new original(args);
-//     if (instance.mapperProps) {
-//       const mapper = new DTOMapper();
-//       mapper.mapperProps = instance.mapperProps;
-//       const __from__ = Reflect.getMetadata(symbolFromMap, mapper);
-//       __from__(args[0]);
-//       Object.assign(instance, mapper);
-//       delete instance.mapperProps;
-//     }
-//     return instance;
-//   };
-
-//   // copy prototype so intanceof operator still works
-//   f.prototype = original.prototype;
-
-//   // return new constructor (will override original)
-//   return f;
-// }
+export function MappedDto(target: any): any {
+  // save a reference to the original constructor
+  const original = target;
+  // the new constructor behavior
+  const func: any = function (...args: any[]) {
+    const instance = new original(args);
+    if (instance.mapperProps) {
+      const mapper = new DTOMapper();
+      mapper.mapperProps = instance.mapperProps;
+      const __from__ = Reflect.getMetadata(symbolFromMap, mapper);
+      __from__(args[0]);
+      Object.assign(instance, mapper);
+      delete instance.mapperProps;
+    }
+    return instance;
+  };
+  // copy prototype so instanceOf operator still works
+  func.prototype = original.prototype;
+  // return new constructor (will override original)
+  return func;
+}
