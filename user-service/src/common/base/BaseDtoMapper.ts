@@ -63,11 +63,6 @@ export class DTOMapper<DTOAttributes = any> {
 
     if (this.mapperProps)
       for (const prop of Object.keys(this.mapperProps)) {
-        if (this[prop] instanceof DTOMapper) {
-          // support deep mapping
-          this.mapChild(this, data, prop);
-          continue;
-        }
         const value = this.getDataFromSource(data, this.mapperProps[prop]);
         if (typeof value !== 'undefined') {
           this[prop] = value;
@@ -75,21 +70,8 @@ export class DTOMapper<DTOAttributes = any> {
       }
   }
 
-  private mapChild(object: any, data: any, prop: any): any {
-    const value = this.getDataFromSource(data, this.mapperProps[prop]);
-    if (typeof object[prop] !== 'undefined') {
-      object[prop].from(value);
-    }
-  }
-
   private getDataFromSource(data: any, prop: MapperProp): any {
-    let preValue = prop.defaultVal;
-    try {
-      preValue = prop.fromFn(data, prop.propKey);
-    } catch (ex) {
-      console.log('ERROR MAPPING ATTR', ex);
-    }
-
+    const preValue = prop.fromFn(data, prop.propKey);
     const rawValue = !_.isUndefined(preValue) ? preValue : prop.defaultVal;
 
     if (_.isObject(rawValue) && _.isEmpty(rawValue) && prop.isMultiple) {
