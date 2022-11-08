@@ -132,28 +132,26 @@ export function MapFrom(
   };
 }
 
-// export type IDtoMapper<T = any> = new (source: T) => IDtoMapper<T>;
+export type IDtoMapper<T = any> = new (source: T) => IDtoMapper<T>;
 
-// export function MappedDto(target: any): any {
-//   // save a reference to the original constructor
-//   const original = target;
-//   // the new constructor behaviour
-//   const f: any = (...args: any[]) => {
-//     const instance = new original(args);
-//     if (instance.mapperProps) {
-//       const mapper = new DTOMapper();
-//       mapper.mapperProps = instance.mapperProps;
-//       const __from__ = Reflect.getMetadata(symbolFromMap, mapper);
-//       __from__(args[0]);
-//       Object.assign(instance, mapper);
-//       delete instance.mapperProps;
-//     }
-//     return instance;
-//   };
-
-//   // copy prototype so intanceof operator still works
-//   f.prototype = original.prototype;
-
-//   // return new constructor (will override original)
-//   return f;
-// }
+export function MappedDto(target: any): any {
+  // save a reference to the original constructor
+  const original = target;
+  // the new constructor behavior
+  const func: any = function (...args: any[]) {
+    const instance = new original(args);
+    if (instance.mapperProps) {
+      const mapper = new DTOMapper();
+      mapper.mapperProps = instance.mapperProps;
+      const __from__ = Reflect.getMetadata(symbolFromMap, mapper);
+      __from__(args[0]);
+      Object.assign(instance, mapper);
+      delete instance.mapperProps;
+    }
+    return instance;
+  };
+  // copy prototype so instanceOf operator still works
+  func.prototype = original.prototype;
+  // return new constructor (will override original)
+  return func;
+}
