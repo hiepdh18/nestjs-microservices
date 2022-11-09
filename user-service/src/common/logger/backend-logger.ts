@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import * as chalk from 'chalk';
-import { REQUEST_ID, SESSION_USER } from '../../common/constant/constants';
+// import { REQUEST_ID, SESSION_USER } from '../../common/constant/constants';
 // import { SessionMiddleware } from 'common/middleware/session.middleware';
 import * as dayjs from 'dayjs';
 // import { User } from 'modules/user/schemas/user.schema';

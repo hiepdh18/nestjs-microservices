@@ -26,8 +26,6 @@ const SIMPLE_MAPPER_FN: MapperFunction = (val) => val;
 
 export const getFromFn =
   (propKey: string | MapperFunction) => (model: any, prop: any) => {
-    console.log('hello');
-
     return deepFind(model, propKey || prop);
   };
 

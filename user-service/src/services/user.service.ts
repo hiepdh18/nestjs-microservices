@@ -38,7 +38,6 @@ export class UserService {
   async findOneUser(opts): Promise<UserReturnDto> {
     try {
       const user = await this.userRepository.findOneBy(opts);
-      console.log(`🔥🔥🔥 => UserService => findOneUser => user`, user);
       return new UserReturnDto(user);
     } catch (error) {
       throw new Error(error);

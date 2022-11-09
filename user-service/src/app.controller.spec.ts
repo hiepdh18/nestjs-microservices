@@ -1,7 +1,7 @@
-import { UserService } from './../services/user.service';
+import { UserService } from './services/user.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from '../app.controller';
-import { CreateUserDto } from '../dtos/create-user.dto';
+import { AppController } from './app.controller';
+import { CreateUserDto } from './dtos/create-user.dto';
 
 beforeAll(async () => {
   process.env.NODE_ENV = `test`;

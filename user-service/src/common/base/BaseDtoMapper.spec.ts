@@ -2,18 +2,14 @@ import {
   deepFind,
   DTOMapper,
   MapFrom,
+  MappedDto,
   ValueMappingFailedError,
-} from './BaseDtoMapper';
+} from '../../common/base/BaseDtoMapper';
 
 class SimpleMappingDto extends DTOMapper {
   @MapFrom()
   prop: any;
 }
-
-beforeAll(async () => {
-  process.env.NODE_ENV = `test`;
-});
-
 describe(`Test BaseDTOMapper.ts`, () => {
   describe(`Function deepFind`, () => {
     it(`Should return property`, () => {
@@ -92,6 +88,29 @@ describe(`Test BaseDTOMapper.ts`, () => {
         prop: string;
       }
       const dto = new Test({ prop: `he` });
+
+      expect(dto).toBeDefined();
+    });
+
+    it(`Should construct with empty object as default value`, () => {
+      class Test extends DTOMapper {
+        @MapFrom(() => undefined, undefined, true, {})
+        prop: string;
+      }
+      const dto = new Test({ prop: `he` });
+
+      expect(dto).toBeDefined();
+    });
+
+    it(`Should return class instance with decorator`, () => {
+      @MappedDto
+      class Test {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        constructor(source: any) {}
+        @MapFrom()
+        prop: string;
+      }
+      const dto = new Test({ prop: 'x' });
 
       expect(dto).toBeDefined();
     });
