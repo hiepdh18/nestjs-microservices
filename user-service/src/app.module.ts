@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserRepository } from 'src/repositories/user.repository';
+import { UserRepository } from './repositories/user.repository';
 
 import { AppController } from './app.controller';
 import { services } from './common/constant/constants';

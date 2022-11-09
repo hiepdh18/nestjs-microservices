@@ -1,6 +1,6 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
-import { services } from 'src/common/constant/constants';
+import { services } from '../common/constant/constants';
 import { ILogin } from './interfaces/login.interface';
 
 @Controller('auth')

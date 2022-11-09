@@ -2,11 +2,11 @@ import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRMQ, RpcException } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
-import { services } from 'src/common/constant/constants';
-import { BackendLogger } from 'src/common/logger/backend-logger';
-import { isEmpty } from 'src/common/utils/util';
-import { TokenDTO } from 'src/dtos/token.dto';
-import { ILogin } from 'src/interfaces/login.interface';
+import { services } from '../common/constant/constants';
+import { BackendLogger } from '../common/logger/backend-logger';
+import { isEmpty } from '../common/utils/util';
+import { TokenDTO } from '../dtos/token.dto';
+import { ILogin } from '../interfaces/login.interface';
 
 @Injectable()
 export class AuthService {

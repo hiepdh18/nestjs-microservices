@@ -1,5 +1,5 @@
 import { Transport } from '@nestjs/microservices';
-import { queues, rabbitURL } from 'src/common/constant/constants';
+import { queues, rabbitURL } from '../../common/constant/constants';
 
 export class ConfigService {
   private readonly envConfig: { [key: string]: any } = null;

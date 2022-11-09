@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Inject, Patch, Post } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { timeout } from 'rxjs';
-import { services } from 'src/common/constant/constants';
+import { services } from './../common/constant/constants';
 import { IUpdateUser } from './interfaces/updateUser.interface';
 import { IUser } from './interfaces/user.interface';
 

@@ -15,10 +15,7 @@ export class AppController {
   constructor(private userService: UserService) {}
 
   @MessagePattern('create.user')
-  async createUser(
-    @Payload() message: CreateUserDto,
-    @Ctx() context: RmqContext,
-  ) {
+  async createUser(@Payload() message: CreateUserDto) {
     return await this.userService.createUser(message);
   }
 
