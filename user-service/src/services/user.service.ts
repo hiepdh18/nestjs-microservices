@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
-import { services } from 'src/common/constant/constants';
-import { CreateUserDto } from 'src/dtos/create-user.dto';
-import { UserReturnDto } from 'src/dtos/user-return.dto';
-import { UserRepository } from 'src/repositories/user.repository';
+import { services } from '../common/constant/constants';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UserReturnDto } from '../dtos/user-return.dto';
+import { UserRepository } from '../repositories/user.repository';
 import { DataSource } from 'typeorm';
 
 @Injectable()
