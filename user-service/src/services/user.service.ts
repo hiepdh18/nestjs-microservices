@@ -5,6 +5,7 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { UserReturnDto } from '../dtos/user-return.dto';
 import { UserRepository } from '../repositories/user.repository';
 import { DataSource } from 'typeorm';
+import { IUser } from '../interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -14,7 +15,7 @@ export class UserService {
     @Inject(services.authService) private authService: ClientRMQ,
   ) {}
 
-  async createUser(user: CreateUserDto): Promise<UserReturnDto> {
+  async createUser(user: IUser): Promise<UserReturnDto> {
     try {
       const newUser = await this.userRepository.create(user);
       const res = await this.userRepository.save(newUser);
