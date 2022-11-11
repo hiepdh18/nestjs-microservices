@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
-import { services } from '../common/constant/constants';
-import { CreateUserDto } from '../dtos/create-user.dto';
-import { UserReturnDto } from '../dtos/user-return.dto';
-import { UserRepository } from '../repositories/user.repository';
 import { DataSource } from 'typeorm';
+import { services } from '../common/constant/constants';
+import { UserReturnDto } from '../dtos/user-return.dto';
 import { IUser } from '../interfaces/user.interface';
+import { UserRepository } from '../repositories/user.repository';
 
 @Injectable()
 export class UserService {

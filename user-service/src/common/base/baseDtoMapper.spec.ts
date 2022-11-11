@@ -4,7 +4,7 @@ import {
   MapFrom,
   MappedDto,
   ValueMappingFailedError,
-} from '../../common/base/BaseDtoMapper';
+} from './baseDtoMapper';
 
 class SimpleMappingDto extends DTOMapper {
   @MapFrom()
