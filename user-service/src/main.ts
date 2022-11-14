@@ -3,6 +3,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { queues } from './common/constant/constants';
 import { RABBIT_URL } from './common/constant/envConstants';
+import { AllExceptionFilter } from './common/filters/exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -18,7 +19,7 @@ async function bootstrap() {
       },
     },
   );
-
+  app.useGlobalFilters(new AllExceptionFilter());
   app.listen();
 }
 bootstrap();

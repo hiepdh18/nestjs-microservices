@@ -1,29 +1,29 @@
 version: "3.8"
 services:
-  api-gateway:
-    image: api-gateway
-    ports:
-      - 3000:3000
-    networks:
-      - rabbit-net
-    depends_on:
-      - rabbitmq
-  auth_service:
-    image: auth_service
-    networks:
-      - rabbit-net
-    depends_on:
-      - rabbitmq
-    restart: always
-  user_service:
-    image: user_service
-    networks:
-      - rabbit-net
-      - postgresql-net
-    depends_on:
-      - postgres
-      - rabbitmq
-    restart: always
+  # api-gateway:
+  #   image: api-gateway
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - rabbit-net
+  #   depends_on:
+  #     - rabbitmq
+  # auth_service:
+  #   image: auth_service
+  #   networks:
+  #     - rabbit-net
+  #   depends_on:
+  #     - rabbitmq
+  #   restart: always
+  # user_service:
+  #   image: user_service
+  #   networks:
+  #     - rabbit-net
+  #     - postgresql-net
+  #   depends_on:
+  #     - postgres
+  #     - rabbitmq
+  #   restart: always
     
   rabbitmq:
     image: rabbitmq:3.8.25-management-alpine

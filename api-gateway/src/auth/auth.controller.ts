@@ -7,8 +7,8 @@ import { ILogin } from './interfaces/login.interface';
 export class AuthController {
   constructor(@Inject(services.authService) private authService: ClientRMQ) {}
 
-  @Post('/password-login')
-  async passwordLogin(@Body() body: ILogin) {
-    return await this.authService.send('login.password', body);
+  @Post('/login')
+  async login(@Body() body: ILogin) {
+    return await this.authService.send('login', body);
   }
 }

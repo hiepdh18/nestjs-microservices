@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientRMQ } from '@nestjs/microservices';
+import { ClientRMQ, RpcException } from '@nestjs/microservices';
 import { DataSource } from 'typeorm';
 import { services } from '../common/constant/constants';
 import { UserReturnDto } from '../dtos/user-return.dto';
@@ -45,8 +45,10 @@ export class UserService {
   }
 
   async updateUser(id: string, opts: any): Promise<UserReturnDto> {
-    if (!id) throw new Error();
+    if (!id) throw new RpcException({ code: 422, message: 'id is required' });
     const user = await this.userRepository.findOneBy({ id });
+    if (!user)
+      throw new RpcException({ status: 422, message: 'User does not exist!' });
     const newUser = await this.userRepository.save({ ...user, ...opts });
 
     // const user = await this.userRepository.findOneBy({ id: data.id });
