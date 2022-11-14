@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientRMQ } from '@nestjs/microservices';
-import { services } from '../common/constant/constants';
-import { CreateUserDto } from '../dtos/create-user.dto';
-import { UserReturnDto } from '../dtos/user-return.dto';
-import { UserRepository } from '../repositories/user.repository';
+import { ClientRMQ, RpcException } from '@nestjs/microservices';
 import { DataSource } from 'typeorm';
+import { services } from '../common/constant/constants';
+import { UserReturnDto } from '../dtos/user-return.dto';
+import { IUser } from '../interfaces/user.interface';
+import { UserRepository } from '../repositories/user.repository';
 
 @Injectable()
 export class UserService {
@@ -14,7 +14,7 @@ export class UserService {
     @Inject(services.authService) private authService: ClientRMQ,
   ) {}
 
-  async createUser(user: CreateUserDto): Promise<UserReturnDto> {
+  async createUser(user: IUser): Promise<UserReturnDto> {
     try {
       const newUser = await this.userRepository.create(user);
       const res = await this.userRepository.save(newUser);
@@ -45,8 +45,10 @@ export class UserService {
   }
 
   async updateUser(id: string, opts: any): Promise<UserReturnDto> {
-    if (!id) throw new Error();
+    if (!id) throw new RpcException({ code: 422, message: 'id is required' });
     const user = await this.userRepository.findOneBy({ id });
+    if (!user)
+      throw new RpcException({ status: 422, message: 'User does not exist!' });
     const newUser = await this.userRepository.save({ ...user, ...opts });
 
     // const user = await this.userRepository.findOneBy({ id: data.id });

@@ -12,8 +12,6 @@ export class AllExceptionFilter extends BaseExceptionFilter {
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const response: Response = ctx.getResponse();
     this.handleMessage(exception);
-
-    // Response to client
     AllExceptionFilter.handleResponse(response, exception);
   }
 
@@ -35,7 +33,6 @@ export class AllExceptionFilter extends BaseExceptionFilter {
   private static handleResponse(response: Response, exception: any): void {
     let responseBody: any = { message: 'Internal server error' };
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-
     switch (exception.constructor) {
       case HttpException:
         responseBody = exception.getResponse();
@@ -44,9 +41,11 @@ export class AllExceptionFilter extends BaseExceptionFilter {
         break;
       case RpcException:
         break;
-      default:
-        response.status(401).json(exception.message);
-        break;
     }
+    if (exception.message && exception.status != 'error') {
+      responseBody = exception.message;
+      statusCode = exception.status;
+    }
+    response.status(statusCode).json(responseBody);
   }
 }

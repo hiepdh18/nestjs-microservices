@@ -7,8 +7,8 @@ import { AuthService } from './services/auth.service';
 export class AppController {
   constructor(private readonly authService: AuthService) {}
 
-  @MessagePattern('login.password')
-  async passwordLogin(@Payload() data: ILogin) {
-    return await this.authService.passwordLogin(data);
+  @MessagePattern('login')
+  async login(@Payload() data: ILogin) {
+    return await this.authService.login(data);
   }
 }

@@ -1,4 +1,4 @@
-import { DTOMapper, MapFrom } from '../common/base/BaseDtoMapper';
+import { DTOMapper, MapFrom } from '../common/base/baseDtoMapper';
 
 export class UserReturnDto extends DTOMapper {
   // @MapFrom((data) => data.email.email)

@@ -31,12 +31,14 @@ export class AuthService {
     }
   }
 
-  async passwordLogin(login: ILogin): Promise<TokenDTO> {
+  async login(login: ILogin): Promise<TokenDTO> {
     const { email, password } = login;
     const user = await lastValueFrom(
       this.userService.send('get.user.by.email', email).pipe(),
     );
-    if (isEmpty(user)) throw new RpcException('Invalid credentials.');
+    console.log(`🔥🔥🔥 => AuthService => login => user`, user);
+    if (isEmpty(user))
+      throw new RpcException({ status: 422, message: 'Invalid credentials.' });
     const options = {
       grant_type: 'password',
       username: email,
