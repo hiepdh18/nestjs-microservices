@@ -1,3 +1,4 @@
+import { LoginDto } from './../dtos/longin.dto';
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRMQ, RpcException } from '@nestjs/microservices';
@@ -6,7 +7,6 @@ import { services } from '../common/constant/constants';
 import { BackendLogger } from '../common/logger/backend-logger';
 import { isEmpty } from '../common/utils/util';
 import { TokenDTO } from '../dtos/token.dto';
-import { ILogin } from '../interfaces/login.interface';
 
 @Injectable()
 export class AuthService {
@@ -31,14 +31,13 @@ export class AuthService {
     }
   }
 
-  async login(login: ILogin): Promise<TokenDTO> {
+  async login(login: LoginDto): Promise<TokenDTO> {
     const { email, password } = login;
     const user = await lastValueFrom(
       this.userService.send('get.user.by.email', email).pipe(),
     );
-    console.log(`🔥🔥🔥 => AuthService => login => user`, user);
     if (isEmpty(user))
-      throw new RpcException({ status: 422, message: 'Invalid credentials.' });
+      throw new RpcException({ status: 422, message: 'Invalid credentials' });
     const options = {
       grant_type: 'password',
       username: email,
