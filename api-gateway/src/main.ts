@@ -7,7 +7,7 @@ import { AllExceptionFilter } from './common/filters/exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const options = new DocumentBuilder().build();
+  const options = new DocumentBuilder().addBearerAuth().build();
   const document = SwaggerModule.createDocument(app, options);
 
   SwaggerModule.setup('docs', app, document);

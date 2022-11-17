@@ -1,3 +1,4 @@
+import { AUTH0 } from './../common/constant/envConstants';
 import { LoginDto } from './../dtos/longin.dto';
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
@@ -16,18 +17,22 @@ export class AuthService {
     @Inject(services.userService) private userService: ClientRMQ, // private readonly httpService: HttpService,
   ) {}
 
-  async validateUser(payload: any): Promise<any> {
+  async validateUser(payload: {
+    username: string;
+    password: string;
+  }): Promise<any> {
     try {
       const user = await this.userService.send('get.user', {
-        email: payload.email.toLowerCase(),
+        username: payload.username.toLowerCase(),
       });
 
       if (!user) {
-        throw new Error('');
+        throw new RpcException({ status: 422, message: 'Invalid username' });
       }
       return user;
     } catch (error) {
-      throw new Error(error);
+      // this.logger.error(error);
+      throw new RpcException({ status: 500, message: 'Internal server error' });
     }
   }
 
@@ -42,9 +47,9 @@ export class AuthService {
       grant_type: 'password',
       username: email,
       password: password,
-      client_id: process.env.AUTH0_CLIENT_ID,
-      client_secret: process.env.AUTH0_CLIENT_SECRET,
-      audience: process.env.AUTH0_AUDIENCE,
+      client_id: AUTH0.CLIENT_ID,
+      client_secret: AUTH0.CLIENT_SECRET,
+      audience: AUTH0.AUDIENCE,
       scope: 'offline_access',
     };
 
@@ -60,11 +65,12 @@ export class AuthService {
     //     .pipe(),
     // );
     const res = await lastValueFrom(
-      this.httpService
-        .post(`${process.env.AUTH0_DOMAIN}/oauth/token`, options)
-        .pipe(),
+      this.httpService.post(`${AUTH0.DOMAIN}/oauth/token`, options).pipe(),
     );
-
     return new TokenDTO(res.data);
+  }
+
+  validateToken(jwt: string) {
+    return false;
   }
 }

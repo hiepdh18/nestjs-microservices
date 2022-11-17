@@ -1,5 +1,6 @@
 import { Transport } from '@nestjs/microservices';
-import { queues, rabbitURL } from '../../common/constant/constants';
+import { RABBIT_URL } from 'src/common/constant/envConstants';
+import { queues } from '../../common/constant/constants';
 
 export class ConfigService {
   private readonly envConfig: { [key: string]: any } = null;
@@ -9,7 +10,7 @@ export class ConfigService {
 
     this.envConfig.userService = {
       options: {
-        urls: [rabbitURL],
+        urls: [RABBIT_URL],
         queue: queues.userQueue,
         queueOptions: {
           durable: false,
