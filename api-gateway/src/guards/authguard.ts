@@ -1,7 +1,6 @@
 import { CanActivate, ExecutionContext, Inject } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
-import { timeout } from 'rxjs/operators';
 import { services } from './../common/constant/constants';
 import { BackendLogger } from './../common/logger/backend-logger';
 
@@ -23,8 +22,11 @@ export class AuthGuard implements CanActivate {
       const res = await lastValueFrom(
         this.authService
           .send(
-            { role: 'auth', cmd: 'check' },
-            { jwt: req.headers['authorization']?.split(' ')[1] },
+            { role: 'auth', cmd: 'checkJwt' },
+            {
+              jwt: req.headers['authorization']?.split(' ')[1],
+              url: req.originalUrl,
+            },
           )
           .pipe(),
       );

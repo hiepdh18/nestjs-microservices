@@ -25,17 +25,17 @@ export class UserController {
 
   @Post('/')
   async createUser(@Body() user: UserDto) {
-    return await this.userService.send('create.user', user).pipe(timeout(5000));
+    return await this.userService.send('create_user', user).pipe(timeout(5000));
   }
 
   @Patch('/')
   async updateUser(@Body() data: UpdateUserDto) {
-    return await this.userService.send('update.user', data).pipe(timeout(5000));
+    return await this.userService.send('update_user', data).pipe(timeout(5000));
   }
 
   @Get('/')
   async getList() {
-    return await this.userService.send('get.users', '').pipe(timeout(5000));
+    return await this.userService.send('get_users', '').pipe(timeout(5000));
   }
 
   @UseGuards(AuthGuard)

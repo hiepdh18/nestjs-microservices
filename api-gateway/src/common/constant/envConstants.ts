@@ -84,7 +84,6 @@ const auth0_options = {
     REDIRECT_URI: `http://localhost:3001/callback`,
     REDIRECT_LOGOUT_URI: `http://localhost:3001`,
     SCOPE: 'openid profile offline_access',
-    REALM: 'master',
   },
   test: {
     DOMAIN: `https://owle.us.auth0.com`,
@@ -94,7 +93,6 @@ const auth0_options = {
     REDIRECT_URI: `http://localhost:3001/callback`,
     REDIRECT_LOGOUT_URI: `http://localhost:3001`,
     SCOPE: 'openid profile offline_access',
-    REALM: 'master',
   },
   docker: {},
   stage: {},

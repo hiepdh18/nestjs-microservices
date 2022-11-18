@@ -14,27 +14,27 @@ import { UserService } from './services/user.service';
 export class AppController {
   constructor(private userService: UserService) {}
 
-  @MessagePattern('create.user')
+  @MessagePattern('create_user')
   async createUser(@Payload() message: CreateUserDto) {
     return await this.userService.createUser(message);
   }
 
-  @MessagePattern('get.users')
+  @MessagePattern('get_users')
   async getUsers() {
     return await this.userService.findAllUser();
   }
 
-  @MessagePattern('get.user')
+  @MessagePattern('get_user')
   async getUser(@Payload() opts) {
     return await this.userService.findOneUser(opts);
   }
 
-  @MessagePattern('get.user.by.email')
+  @MessagePattern('get_user_by_email')
   async getUserByEmail(@Payload() email) {
     return await this.userService.findOneUser({ email });
   }
 
-  @MessagePattern('update.user')
+  @MessagePattern('update_user')
   async updateUser(
     @Payload() data: IUpdateUser,
     // @Ctx() context: RmqContext,
