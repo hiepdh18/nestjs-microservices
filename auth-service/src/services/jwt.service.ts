@@ -7,8 +7,8 @@ import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class JwtService {
-  @InjectRepository(Auth)
-  private readonly repository: Repository<Auth>;
+  // @InjectRepository(Auth)
+  // private readonly repository: Repository<Auth>;
 
   private readonly jwt: Jwt;
 

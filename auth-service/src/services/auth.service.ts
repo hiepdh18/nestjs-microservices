@@ -24,10 +24,10 @@ export class AuthService {
       client_id: AUTH0.CLIENT_ID,
       client_secret: AUTH0.CLIENT_SECRET,
       audience: AUTH0.AUDIENCE,
-      env_client_id: 'QJL930vdvCuRBS7cy0ckZRy3r7zjRbPC',
-      env_client_secret:
-        '-DBrnKc5Ib7mrK1xGZuK0ciBEXlMI-JHvdhX0P98H2__q3TTVpQEvIYgSN-775l7',
-      realm: 'cellar',
+      // env_client_id: 'QJL930vdvCuRBS7cy0ckZRy3r7zjRbPC',
+      // env_client_secret:
+      //   '-DBrnKc5Ib7mrK1xGZuK0ciBEXlMI-JHvdhX0P98H2__q3TTVpQEvIYgSN-775l7',
+      // realm: 'cellar',
     };
     const { data } = await lastValueFrom(
       this.httpService.post(`${AUTH0.DOMAIN}/oauth/token`, options).pipe(),
@@ -51,7 +51,7 @@ export class AuthService {
         .post(
           `${AUTH0.DOMAIN}/api/v2/users`,
           {
-            // connection: AUTH0.REAM,
+            connection: AUTH0.REAM,
             email: data.email,
             password: data.password,
             user_metadata: {},
@@ -127,15 +127,15 @@ export class AuthService {
     return new TokenDTO(res.data);
   }
 
-  // validateToken(jwt: string, url: string): Promise<any> {
-  //   return jwt({
-  //     secret: jwksRsa.expressJwtSecret({
-  //       cache: true,
-  //       rateLimit: true,
-  //       jwksRequestsPerMinute: 15,
-  //       jwksUri: 'https://trulet.au.auth0.com/.well-known/jwks.json',
-  //     }),
-  //     algorithms: ['RS256'],
-  //   });
-  // }
+  validateToken(jwt: string, url: string): Promise<any> {
+    return jwt({
+      secret: jwksRsa.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 15,
+        jwksUri: 'https://trulet.au.auth0.com/.well-known/jwks.json',
+      }),
+      algorithms: ['RS256'],
+    });
+  }
 }

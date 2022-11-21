@@ -20,7 +20,7 @@ export class AppController {
     return await this.authService.login(data);
   }
 
-  @MessagePattern({ role: 'auth', cmd: 'checkJwt' })
+  @MessagePattern('checkJwt')
   async checkJWT(@Payload() data: any) {
     try {
       return await this.authService.validateToken(data.jwt, data.url);
