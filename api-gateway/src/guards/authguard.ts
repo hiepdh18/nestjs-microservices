@@ -29,7 +29,6 @@ export class AuthGuard implements CanActivate {
       );
       return res;
     } catch (err) {
-      this.logger.error(err.message, err.toString());
       return false;
     }
   }

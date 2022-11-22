@@ -1,3 +1,4 @@
+import { JwtService } from './jwt.service';
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRMQ, RpcException } from '@nestjs/microservices';
@@ -9,10 +10,14 @@ import { TokenDTO } from '../dtos/token.dto';
 import { AUTH0 } from './../common/constant/envConstants';
 import { LoginDto } from './../dtos/longin.dto';
 import { RegisterDto } from './../dtos/register.dto';
+import jwt from 'express-jwt';
+import jwksRsa from 'jwks-rsa';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new BackendLogger(AuthService.name);
+  @Inject(JwtService)
+  private readonly jwtService: JwtService;
   constructor(
     private readonly httpService: HttpService,
     @Inject(services.userService) private userService: ClientRMQ, // private readonly httpService: HttpService,
@@ -97,18 +102,31 @@ export class AuthService {
     const user = await lastValueFrom(
       this.userService.send('get_user_by_email', email).pipe(),
     );
-    console.log(`🔥🔥🔥 => AuthService => login => user`, user);
     if (isEmpty(user))
       throw new RpcException({ status: 422, message: 'Invalid credentials' });
     const options = {
+      // grant_type: 'password',
+      // username: email,
+      // password: password,
+      // client_id: AUTH0.CLIENT_ID,
+      // client_secret: AUTH0.CLIENT_SECRET,
+      // audience: AUTH0.AUDIENCE,
+      // scope: 'offline_access',
+
       grant_type: 'password',
-      username: email,
-      password: password,
-      client_id: AUTH0.CLIENT_ID,
-      client_secret: AUTH0.CLIENT_SECRET,
-      audience: AUTH0.AUDIENCE,
+      client_id: 'vbl9JP3XcoAOQxGxYmn0zCFEu39ZwHog',
+      client_secret:
+        'CbpVot0GWjuLFdLkm2YcTm1DkHnFghz3YJx0obs2Q4zIKbNO7vKI2GOPi15D7nOj',
+      audience: 'https://owle.us.auth0.com/api/v2/',
+      username: 'hiepdh@owle.com',
       scope: 'offline_access',
+      password: '123456aA@',
     };
+    console.log(`🔥🔥🔥 => AuthService => login => options`, options);
+    const test = await this.httpService.get(
+      'https://api.sampleapis.com/beers/ale',
+    );
+    console.log(`🔥🔥🔥 => AuthService => login => tk`, test);
 
     // const res = await lastValueFrom(
     //   this.httpService
@@ -124,18 +142,11 @@ export class AuthService {
     const res = await lastValueFrom(
       this.httpService.post(`${AUTH0.DOMAIN}/oauth/token`, options).pipe(),
     );
+    console.log(`🔥🔥🔥 => AuthService => login => res`, res);
     return new TokenDTO(res.data);
   }
 
-  validateToken(jwt: string, url: string): Promise<any> {
-    return jwt({
-      secret: jwksRsa.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 15,
-        jwksUri: 'https://trulet.au.auth0.com/.well-known/jwks.json',
-      }),
-      algorithms: ['RS256'],
-    });
+  async validateToken(token: string, url: string): Promise<any> {
+    return await this.jwtService.verify(token);
   }
 }
