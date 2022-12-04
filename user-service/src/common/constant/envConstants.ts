@@ -76,7 +76,7 @@ const mail_options = {
 const auth0_options = {
   development: {},
   sandbox: {
-    DOMAIN: `https://owle.us.auth0.com`,
+    DOMAIN: `https://owle.us.auth0.com/`,
     CLIENT_ID: `vbl9JP3XcoAOQxGxYmn0zCFEu39ZwHog`,
     CLIENT_SECRET: `FnUakIY3xRgqb5q8ai89HhqU_MBg-5jimF_Zav2QZuejQ9rB63-hhol-sWQpMZbe`,
     AUDIENCE: `https://owle.us.auth0.com/api/v2/`,
@@ -85,7 +85,7 @@ const auth0_options = {
     SCOPE: 'openid profile offline_access',
   },
   test: {
-    DOMAIN: `https://owle.us.auth0.com`,
+    DOMAIN: `https://owle.us.auth0.com/`,
     CLIENT_ID: `vbl9JP3XcoAOQxGxYmn0zCFEu39ZwHog`,
     CLIENT_SECRET: `FnUakIY3xRgqb5q8ai89HhqU_MBg-5jimF_Zav2QZuejQ9rB63-hhol-sWQpMZbe`,
     AUDIENCE: `https://owle.us.auth0.com/api/v2/`,

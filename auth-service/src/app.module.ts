@@ -1,13 +1,14 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { ClientProxyFactory } from '@nestjs/microservices';
+import * as jwks from 'jwks-rsa';
 import { AppController } from './app.controller';
 import { services } from './common/constant/constants';
 import { AuthService } from './services/auth.service';
 import { ConfigService } from './services/config/config.service';
-import { JwtModule } from '@nestjs/jwt';
-import * as jwks from 'jwks-rsa';
 import { JwtService } from './services/jwt.service';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [
@@ -18,21 +19,12 @@ import { JwtService } from './services/jwt.service';
       }),
     }),
     JwtModule.register({
-      secret: jwks
-        .expressJwtSecret({
-          cache: true,
-          rateLimit: true,
-          jwksRequestsPerMinute: 15,
-          jwksUri: 'https://trulet.au.auth0.com/.well-known/jwks.json',
-        })
-        .toString(),
-      signOptions: {
-        algorithm: 'RS256',
-      },
+      secret: 'dev',
     }),
   ],
   controllers: [AppController],
   providers: [
+    JwtStrategy,
     AuthService,
     ConfigService,
     JwtService,

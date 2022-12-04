@@ -10,8 +10,6 @@ import { TokenDTO } from '../dtos/token.dto';
 import { AUTH0 } from './../common/constant/envConstants';
 import { LoginDto } from './../dtos/longin.dto';
 import { RegisterDto } from './../dtos/register.dto';
-import jwt from 'express-jwt';
-import jwksRsa from 'jwks-rsa';
 
 @Injectable()
 export class AuthService {
@@ -142,11 +140,11 @@ export class AuthService {
     const res = await lastValueFrom(
       this.httpService.post(`${AUTH0.DOMAIN}/oauth/token`, options).pipe(),
     );
-    console.log(`🔥🔥🔥 => AuthService => login => res`, res);
     return new TokenDTO(res.data);
   }
 
   async validateToken(token: string, url: string): Promise<any> {
-    return await this.jwtService.verify(token);
+    const check = this.jwtService.verify(token);
+    return check;
   }
 }

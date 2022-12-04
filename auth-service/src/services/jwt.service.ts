@@ -7,9 +7,6 @@ import { JwtService as Jwt } from '@nestjs/jwt';
 
 @Injectable()
 export class JwtService {
-  // @InjectRepository(Auth)
-  // private readonly repository: Repository<Auth>;
-
   private readonly jwt: Jwt;
 
   constructor(jwt: Jwt) {
@@ -46,7 +43,12 @@ export class JwtService {
   // Validate JWT Token, throw forbidden error if JWT Token is invalid
   public async verify(token: string): Promise<any> {
     try {
-      return this.jwt.verify(token);
-    } catch (err) {}
+      const res = await this.jwt.verify(token);
+      console.log(`🔥🔥🔥 => JwtService => verify => res`, res);
+
+      return res;
+    } catch (err) {
+      console.log(`🔥🔥🔥 => JwtService => verify => err`, err);
+    }
   }
 }

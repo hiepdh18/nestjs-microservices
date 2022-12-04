@@ -1,4 +1,3 @@
-import { AuthGuard } from '../guards/authguard';
 import {
   Body,
   Controller,
@@ -9,11 +8,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
-import { lastValueFrom, timeout } from 'rxjs';
+import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { timeout } from 'rxjs';
 import { services } from './../common/constant/constants';
 import { UpdateUserDto } from './dtos/updateUser.dto';
 import { UserDto } from './dtos/user.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth()
 @Controller('user')
@@ -38,7 +39,7 @@ export class UserController {
     return await this.userService.send('get_users', '').pipe(timeout(5000));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard(`jwt`))
   @Get('/greet')
   greet(): string | Promise<string> {
     return `Greetings authenticated user`;
