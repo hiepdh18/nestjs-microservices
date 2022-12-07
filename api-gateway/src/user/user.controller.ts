@@ -1,3 +1,4 @@
+import { AuthGuard } from './../guards/authguard';
 import {
   Body,
   Controller,
@@ -8,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ClientRMQ } from '@nestjs/microservices';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 // import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { timeout } from 'rxjs';
@@ -39,7 +40,7 @@ export class UserController {
     return await this.userService.send('get_users', '').pipe(timeout(5000));
   }
 
-  @UseGuards(AuthGuard(`jwt`))
+  @UseGuards(AuthGuard)
   @Get('/greet')
   greet(): string | Promise<string> {
     return `Greetings authenticated user`;

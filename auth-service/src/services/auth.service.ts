@@ -1,4 +1,3 @@
-import { JwtService } from './jwt.service';
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientRMQ, RpcException } from '@nestjs/microservices';
@@ -10,12 +9,12 @@ import { TokenDTO } from '../dtos/token.dto';
 import { AUTH0 } from './../common/constant/envConstants';
 import { LoginDto } from './../dtos/longin.dto';
 import { RegisterDto } from './../dtos/register.dto';
+import * as jwt from 'jsonwebtoken';
+import * as jwksClient from 'jwks-rsa';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new BackendLogger(AuthService.name);
-  @Inject(JwtService)
-  private readonly jwtService: JwtService;
   constructor(
     private readonly httpService: HttpService,
     @Inject(services.userService) private userService: ClientRMQ, // private readonly httpService: HttpService,
@@ -103,48 +102,37 @@ export class AuthService {
     if (isEmpty(user))
       throw new RpcException({ status: 422, message: 'Invalid credentials' });
     const options = {
-      // grant_type: 'password',
-      // username: email,
-      // password: password,
-      // client_id: AUTH0.CLIENT_ID,
-      // client_secret: AUTH0.CLIENT_SECRET,
-      // audience: AUTH0.AUDIENCE,
-      // scope: 'offline_access',
-
       grant_type: 'password',
-      client_id: 'vbl9JP3XcoAOQxGxYmn0zCFEu39ZwHog',
-      client_secret:
-        'CbpVot0GWjuLFdLkm2YcTm1DkHnFghz3YJx0obs2Q4zIKbNO7vKI2GOPi15D7nOj',
-      audience: 'https://owle.us.auth0.com/api/v2/',
-      username: 'hiepdh@owle.com',
+      username: email,
+      password: password,
+      client_id: AUTH0.CLIENT_ID,
+      client_secret: AUTH0.CLIENT_SECRET,
+      audience: AUTH0.AUDIENCE,
       scope: 'offline_access',
-      password: '123456aA@',
     };
-    console.log(`🔥🔥🔥 => AuthService => login => options`, options);
-    const test = await this.httpService.get(
-      'https://api.sampleapis.com/beers/ale',
-    );
-    console.log(`🔥🔥🔥 => AuthService => login => tk`, test);
 
-    // const res = await lastValueFrom(
-    //   this.httpService
-    //     .post(`https://owle.us.auth0.com/oauth/token`, {
-    //       client_id: 'vbl9JP3XcoAOQxGxYmn0zCFEu39ZwHog',
-    //       client_secret:
-    //         'CbpVot0GWjuLFdLkm2YcTm1DkHnFghz3YJx0obs2Q4zIKbNO7vKI2GOPi15D7nOj',
-    //       audience: 'https://owle.us.auth0.com/api/v2/',
-    //       grant_type: 'client_credentials',
-    //     })
-    //     .pipe(),
-    // );
     const res = await lastValueFrom(
-      this.httpService.post(`${AUTH0.DOMAIN}/oauth/token`, options).pipe(),
+      this.httpService.post(`${AUTH0.DOMAIN}oauth/token`, options).pipe(),
     );
     return new TokenDTO(res.data);
   }
 
   async validateToken(token: string, url: string): Promise<any> {
-    const check = this.jwtService.verify(token);
-    return check;
+    try {
+      const client = jwksClient({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 15,
+        jwksUri: `${AUTH0.DOMAIN}.well-known/jwks.json`,
+      });
+      const decodedToken = jwt.decode(token, { complete: true });
+      const kid = decodedToken.header.kid;
+      const key = await client.getSigningKey(kid);
+      const options = {
+        audience: AUTH0.AUDIENCE,
+        issuer: AUTH0.ISSUER,
+      };
+      return jwt.verify(token, key.getPublicKey(), options);
+    } catch (error) {}
   }
 }

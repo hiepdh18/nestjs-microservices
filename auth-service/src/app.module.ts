@@ -7,7 +7,6 @@ import { AppController } from './app.controller';
 import { services } from './common/constant/constants';
 import { AuthService } from './services/auth.service';
 import { ConfigService } from './services/config/config.service';
-import { JwtService } from './services/jwt.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
@@ -19,7 +18,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
       }),
     }),
     JwtModule.register({
-      secret: 'dev',
+      secret: '',
     }),
   ],
   controllers: [AppController],
@@ -27,7 +26,6 @@ import { JwtStrategy } from './strategy/jwt.strategy';
     JwtStrategy,
     AuthService,
     ConfigService,
-    JwtService,
     {
       provide: services.userService,
       useFactory: (configService: ConfigService) => {
