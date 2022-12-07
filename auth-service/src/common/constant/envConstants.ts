@@ -78,11 +78,13 @@ const auth0_options = {
   sandbox: {
     DOMAIN: `https://owle.us.auth0.com/`,
     CLIENT_ID: `vbl9JP3XcoAOQxGxYmn0zCFEu39ZwHog`,
-    CLIENT_SECRET: `FnUakIY3xRgqb5q8ai89HhqU_MBg-5jimF_Zav2QZuejQ9rB63-hhol-sWQpMZbe`,
+    CLIENT_SECRET: `CbpVot0GWjuLFdLkm2YcTm1DkHnFghz3YJx0obs2Q4zIKbNO7vKI2GOPi15D7nOj`,
+    // CLIENT_SECRET: `FnUakIY3xRgqb5q8ai89HhqU_MBg-5jimF_Zav2QZuejQ9rB63-hhol-sWQpMZbe`,
     AUDIENCE: `https://owle.us.auth0.com/api/v2/`,
     REDIRECT_URI: `http://localhost:3001/callback`,
     REDIRECT_LOGOUT_URI: `http://localhost:3001`,
     SCOPE: 'openid profile offline_access',
+    REALM: 'master',
   },
   test: {
     DOMAIN: `https://owle.us.auth0.com/`,
@@ -92,6 +94,7 @@ const auth0_options = {
     REDIRECT_URI: `http://localhost:3001/callback`,
     REDIRECT_LOGOUT_URI: `http://localhost:3001`,
     SCOPE: 'openid profile offline_access',
+    REALM: 'master',
   },
   docker: {},
   stage: {},
